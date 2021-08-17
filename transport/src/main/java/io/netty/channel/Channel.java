@@ -28,8 +28,7 @@ import java.net.SocketAddress;
 
 
 /**
- * A nexus to a network socket or a component which is capable of I/O
- * operations such as read, write, connect, and bind.
+ * 连接到网络套接字或能够进行读写、连接和绑定等IO操作的组件。
  * <p>
  * A channel provides a user:
  * <ul>
