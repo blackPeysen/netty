@@ -18,10 +18,9 @@ package io.netty.channel;
 import java.util.Queue;
 
 /**
- * Factory used to create {@link Queue} instances that will be used to store tasks for an {@link EventLoop}.
+ * 用于创建{@link Queue}实例的工厂，该实例将用于存储{@link EventLoop}的任务。
  *
- * Generally speaking the returned {@link Queue} MUST be thread-safe and depending on the {@link EventLoop}
- * implementation must be of type {@link java.util.concurrent.BlockingQueue}.
+ * 一般来说，返回的{@link Queue}必须是线程安全的，取决于{@link EventLoop}实现必须是{@link java.util.concurrent.BlockingQueue}类型。
  */
 public interface EventLoopTaskQueueFactory {
 

@@ -40,8 +40,8 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
 /**
- * The default {@link ChannelPipeline} implementation.  It is usually created
- * by a {@link Channel} implementation when the {@link Channel} is created.
+ * 默认的{@link ChannelPipeline}实现。
+ * 它通常是由在创建{@link Channel}时由{@link Channel}实现。
  */
 public class DefaultChannelPipeline implements ChannelPipeline {
 

@@ -23,11 +23,11 @@ import java.nio.channels.WritableByteChannel;
 import java.util.Map;
 
 /**
- * A set of configuration properties of a {@link Channel}.
+ * 一个{@link Channel}的配置属性集。
  * <p>
- * Please down-cast to more specific configuration type such as
- * {@link SocketChannelConfig} or use {@link #setOptions(Map)} to set the
- * transport-specific properties:
+ * 请向下转换到更具体的配置类型，例如
+ * {@link SocketChannelConfig}或使用{@link #setOptions(Map)}设置
+ * 传输的特性:
  * <pre>
  * {@link Channel} ch = ...;
  * {@link SocketChannelConfig} cfg = <strong>({@link SocketChannelConfig}) ch.getConfig();</strong>
@@ -36,9 +36,9 @@ import java.util.Map;
  *
  * <h3>Option map</h3>
  *
- * An option map property is a dynamic write-only property which allows
- * the configuration of a {@link Channel} without down-casting its associated
- * {@link ChannelConfig}.  To update an option map, please call {@link #setOptions(Map)}.
+ * 选项映射属性是允许动态只写的属性
+ * 没有向下转换的{@link Channel}的配置
+ * {@link ChannelConfig}。要更新选项映射，请调用{@link #setOptions(Map)}。
  * <p>
  * All {@link ChannelConfig} has the following options:
  *
@@ -58,30 +58,29 @@ import java.util.Map;
  * </tr>
  * </table>
  * <p>
- * More options are available in the sub-types of {@link ChannelConfig}.  For
- * example, you can configure the parameters which are specific to a TCP/IP
- * socket as explained in {@link SocketChannelConfig}.
+ * 更多的选项在{@link ChannelConfig}的子类型中可用。
+ * 为example，可以配置特定于TCP/IP的参数在{@link SocketChannelConfig}中解释。
  */
 public interface ChannelConfig {
 
     /**
-     * Return all set {@link ChannelOption}'s.
+     * 返回所有设置的{@link ChannelOption}。
      */
     Map<ChannelOption<?>, Object> getOptions();
 
     /**
-     * Sets the configuration properties from the specified {@link Map}.
+     * 从指定的{@link Map}设置配置属性。
      */
     boolean setOptions(Map<ChannelOption<?>, ?> options);
 
     /**
-     * Return the value of the given {@link ChannelOption}
+     * 返回给定的{@link ChannelOption}的值
      */
     <T> T getOption(ChannelOption<T> option);
 
     /**
-     * Sets a configuration property with the specified name and value.
-     * To override this method properly, you must call the super class:
+     * 使用指定的名称和值设置配置属性。
+     *  为了正确地覆盖这个方法，你必须调用超类:
      * <pre>
      * public boolean setOption(ChannelOption&lt;T&gt; option, T value) {
      *     if (super.setOption(option, value)) {
@@ -102,18 +101,16 @@ public interface ChannelConfig {
     <T> boolean setOption(ChannelOption<T> option, T value);
 
     /**
-     * Returns the connect timeout of the channel in milliseconds.  If the
-     * {@link Channel} does not support connect operation, this property is not
-     * used at all, and therefore will be ignored.
+     * 返回通道的连接超时(以毫秒为单位)。
+     *      如果{@link Channel}不支持连接操作，此属性不支持根本不用，因此将被忽略。
      *
-     * @return the connect timeout in milliseconds.  {@code 0} if disabled.
+     * @return 连接超时，以毫秒为单位。{@code 0}如果禁用。
      */
     int getConnectTimeoutMillis();
 
     /**
-     * Sets the connect timeout of the channel in milliseconds.  If the
-     * {@link Channel} does not support connect operation, this property is not
-     * used at all, and therefore will be ignored.
+     * 设置通道的连接超时，以毫秒为单位。
+     *      如果{@link Channel}不支持连接操作，此属性不支持根本不用，因此将被忽略。
      *
      * @param connectTimeoutMillis the connect timeout in milliseconds.
      *                             {@code 0} to disable.

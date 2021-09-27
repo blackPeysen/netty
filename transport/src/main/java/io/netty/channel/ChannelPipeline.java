@@ -30,17 +30,15 @@ import java.util.NoSuchElementException;
 
 
 /**
- * A list of {@link ChannelHandler}s which handles or intercepts inbound events and outbound operations of a
- * {@link Channel}.  {@link ChannelPipeline} implements an advanced form of the
- * <a href="https://www.oracle.com/technetwork/java/interceptingfilter-142169.html">Intercepting Filter</a> pattern
- * to give a user full control over how an event is handled and how the {@link ChannelHandler}s in a pipeline
- * interact with each other.
+ * 类的入站事件和出站操作的{@link ChannelHandler}列表{@link Channel}。
+ * 实现了高级形式的<a href="https://www.oracle.com/technetwork/java/interceptingfilter-142169.html">拦截Filter</a> pattern
+ * 让用户完全控制事件的处理方式和管道中的{@link ChannelHandler}相互作用。
  *
  * <h3>Creation of a pipeline</h3>
  *
- * Each channel has its own pipeline and it is created automatically when a new channel is created.
+ * 每个通道都有自己的管道，并且在创建新通道时自动创建。
  *
- * <h3>How an event flows in a pipeline</h3>
+ * <h3>事件如何在管道中流动</h3>
  *
  * The following diagram describes how I/O events are processed by {@link ChannelHandler}s in a {@link ChannelPipeline}
  * typically. An I/O event is handled by either a {@link ChannelInboundHandler} or a {@link ChannelOutboundHandler}
@@ -126,10 +124,9 @@ import java.util.NoSuchElementException;
  *
  * <h3>Forwarding an event to the next handler</h3>
  *
- * As you might noticed in the diagram shows, a handler has to invoke the event propagation methods in
- * {@link ChannelHandlerContext} to forward an event to its next handler.  Those methods include:
+ * 正如图中所示，处理程序必须调用事件传播方法{@link ChannelHandlerContext}将事件转发给它的下一个处理程序。这些方法包括:
  * <ul>
- * <li>Inbound event propagation methods:
+ * <li>入站事件传播方法:
  *     <ul>
  *     <li>{@link ChannelHandlerContext#fireChannelRegistered()}</li>
  *     <li>{@link ChannelHandlerContext#fireChannelActive()}</li>
@@ -142,7 +139,7 @@ import java.util.NoSuchElementException;
  *     <li>{@link ChannelHandlerContext#fireChannelUnregistered()}</li>
  *     </ul>
  * </li>
- * <li>Outbound event propagation methods:
+ * <li>出站事件传播方法:
  *     <ul>
  *     <li>{@link ChannelHandlerContext#bind(SocketAddress, ChannelPromise)}</li>
  *     <li>{@link ChannelHandlerContext#connect(SocketAddress, SocketAddress, ChannelPromise)}</li>
@@ -156,7 +153,7 @@ import java.util.NoSuchElementException;
  * </li>
  * </ul>
  *
- * and the following example shows how the event propagation is usually done:
+ * 下面的例子展示了事件传播通常是如何完成的:
  *
  * <pre>
  * public class MyInboundHandler extends {@link ChannelInboundHandlerAdapter} {

@@ -43,7 +43,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Abstract base class for {@link Channel} implementations which use a Selector based approach.
+ * 使用基于选择器方法的{@link Channel}实现的抽象基类。
  */
 public abstract class AbstractNioChannel extends AbstractChannel {
 
@@ -72,9 +72,9 @@ public abstract class AbstractNioChannel extends AbstractChannel {
     /**
      * Create a new instance
      *
-     * @param parent            the parent {@link Channel} by which this instance was created. May be {@code null}
-     * @param ch                the underlying {@link SelectableChannel} on which it operates
-     * @param readInterestOp    the ops to set to receive data from the {@link SelectableChannel}
+     * @param parent            创建此实例的父级{@link Channel}。可能是{@code null}
+     * @param ch                它操作的底层{@link SelectableChannel}
+     * @param readInterestOp    设置从{@link SelectableChannel}接收数据的操作
      */
     protected AbstractNioChannel(Channel parent, SelectableChannel ch, int readInterestOp) {
         super(parent);
@@ -104,6 +104,11 @@ public abstract class AbstractNioChannel extends AbstractChannel {
         return (NioUnsafe) super.unsafe();
     }
 
+    /**
+     * 返回当前的SocketChannel
+     *
+     * @return
+     */
     protected SelectableChannel javaChannel() {
         return ch;
     }
@@ -123,7 +128,7 @@ public abstract class AbstractNioChannel extends AbstractChannel {
 
     /**
      * @deprecated No longer supported.
-     * No longer supported.
+     * 不再支持。
      */
     @Deprecated
     protected boolean isReadPending() {
@@ -131,8 +136,8 @@ public abstract class AbstractNioChannel extends AbstractChannel {
     }
 
     /**
-     * @deprecated Use {@link #clearReadPending()} if appropriate instead.
-     * No longer supported.
+     * @deprecated 如果合适，请使用{@link #clearReadPending()}。
+     * 不再支持。
      */
     @Deprecated
     protected void setReadPending(final boolean readPending) {
@@ -188,21 +193,21 @@ public abstract class AbstractNioChannel extends AbstractChannel {
     }
 
     /**
-     * Special {@link Unsafe} sub-type which allows to access the underlying {@link SelectableChannel}
+     * 特殊的{@link Unsafe}子类型，允许访问底层的{@link SelectableChannel}
      */
     public interface NioUnsafe extends Unsafe {
         /**
-         * Return underlying {@link SelectableChannel}
+         * 返回底层{@link SelectableChannel}
          */
         SelectableChannel ch();
 
         /**
-         * Finish connect
+         * 完成连接
          */
         void finishConnect();
 
         /**
-         * Read from underlying {@link SelectableChannel}
+         * 从底层读取{@link SelectableChannel}
          */
         void read();
 
@@ -372,22 +377,30 @@ public abstract class AbstractNioChannel extends AbstractChannel {
         return loop instanceof NioEventLoop;
     }
 
+    /**
+     * 这里将Channel注册到Selector
+     *
+     * @throws Exception
+     */
     @Override
     protected void doRegister() throws Exception {
         boolean selected = false;
         for (;;) {
             try {
+                /**
+                 * 这里是底层Jdk NIO API， 监听事件是0，表示
+                 */
                 selectionKey = javaChannel().register(eventLoop().unwrappedSelector(), 0, this);
                 return;
             } catch (CancelledKeyException e) {
                 if (!selected) {
-                    // Force the Selector to select now as the "canceled" SelectionKey may still be
-                    // cached and not removed because no Select.select(..) operation was called yet.
+                    // 强制选择器现在选择，因为“取消”的SelectionKey可能仍然是
+                    // 缓存且未删除，因为尚未调用Select.select(..)操作。
                     eventLoop().selectNow();
                     selected = true;
                 } else {
-                    // We forced a select operation on the selector before but the SelectionKey is still cached
-                    // for whatever reason. JDK bug ?
+                    // 我们在选择器上强制执行选择操作，但SelectionKey仍然被缓存
+                    // 不管什么原因: JDK错误?
                     throw e;
                 }
             }

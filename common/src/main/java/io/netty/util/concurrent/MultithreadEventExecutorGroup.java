@@ -25,8 +25,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Abstract base class for {@link EventExecutorGroup} implementations that handles their tasks with multiple threads at
- * the same time.
+ *{@link EventExecutorGroup}实现的抽象基类，同一时间用多个线程处理它们的任务。
  */
 public abstract class MultithreadEventExecutorGroup extends AbstractEventExecutorGroup {
 
@@ -39,9 +38,9 @@ public abstract class MultithreadEventExecutorGroup extends AbstractEventExecuto
     /**
      * Create a new instance.
      *
-     * @param nThreads          the number of threads that will be used by this instance.
-     * @param threadFactory     the ThreadFactory to use, or {@code null} if the default should be used.
-     * @param args              arguments which will passed to each {@link #newChild(Executor, Object...)} call
+     * @param nThreads          此实例将使用的线程数。
+     * @param threadFactory     要使用的threadfactory，如果应该使用默认值，则使用{@code null}。
+     * @param args              参数将传递给每个{@link #newChild(Executor, Object...)}调用
      */
     protected MultithreadEventExecutorGroup(int nThreads, ThreadFactory threadFactory, Object... args) {
         this(nThreads, threadFactory == null ? null : new ThreadPerTaskExecutor(threadFactory), args);
@@ -50,9 +49,9 @@ public abstract class MultithreadEventExecutorGroup extends AbstractEventExecuto
     /**
      * Create a new instance.
      *
-     * @param nThreads          the number of threads that will be used by this instance.
-     * @param executor          the Executor to use, or {@code null} if the default should be used.
-     * @param args              arguments which will passed to each {@link #newChild(Executor, Object...)} call
+     * @param nThreads          此实例将使用的线程数。
+     * @param executor          Executor，或者{@code null}(如果应该使用默认值)。
+     * @param args              参数将传递给每个{@link #newChild(Executor, Object...)}调用
      */
     protected MultithreadEventExecutorGroup(int nThreads, Executor executor, Object... args) {
         this(nThreads, executor, DefaultEventExecutorChooserFactory.INSTANCE, args);
@@ -61,10 +60,10 @@ public abstract class MultithreadEventExecutorGroup extends AbstractEventExecuto
     /**
      * Create a new instance.
      *
-     * @param nThreads          the number of threads that will be used by this instance.
-     * @param executor          the Executor to use, or {@code null} if the default should be used.
-     * @param chooserFactory    the {@link EventExecutorChooserFactory} to use.
-     * @param args              arguments which will passed to each {@link #newChild(Executor, Object...)} call
+     * @param nThreads          此实例将使用的线程数。
+     * @param executor          Executor，或者{@code null}(如果应该使用默认值)。
+     * @param chooserFactory    使用的{@link EventExecutorChooserFactory}.
+     * @param args              参数将传递给每个{@link #newChild(Executor, Object...)}调用
      */
     protected MultithreadEventExecutorGroup(int nThreads, Executor executor,
                                             EventExecutorChooserFactory chooserFactory, Object... args) {
@@ -72,15 +71,23 @@ public abstract class MultithreadEventExecutorGroup extends AbstractEventExecuto
             throw new IllegalArgumentException(String.format("nThreads: %d (expected: > 0)", nThreads));
         }
 
+        /**
+         * 创建一个线程池
+         */
         if (executor == null) {
             executor = new ThreadPerTaskExecutor(newDefaultThreadFactory());
         }
 
+        /**
+         * 根据nThreads 创建子事件的EventLoopGroup
+         */
         children = new EventExecutor[nThreads];
-
         for (int i = 0; i < nThreads; i ++) {
             boolean success = false;
             try {
+                /**
+                 * 每一个EventLoop都使用 同一个线程池创建线程对象，并绑定到对应的EventLoop上
+                 */
                 children[i] = newChild(executor, args);
                 success = true;
             } catch (Exception e) {
@@ -143,17 +150,16 @@ public abstract class MultithreadEventExecutorGroup extends AbstractEventExecuto
     }
 
     /**
-     * Return the number of {@link EventExecutor} this implementation uses. This number is the maps
-     * 1:1 to the threads it use.
+     * 返回这个实现使用的{@link EventExecutor}的数量。
+     * 这个号码是地图1:1到它使用的线程。
      */
     public final int executorCount() {
         return children.length;
     }
 
     /**
-     * Create a new EventExecutor which will later then accessible via the {@link #next()}  method. This method will be
-     * called for each thread that will serve this {@link MultithreadEventExecutorGroup}.
-     *
+     * 创建一个新的EventExecutor，稍后将通过{@link #next()}方法访问它。
+     * 这个方法将是{@link MultithreadEventExecutorGroup}。
      */
     protected abstract EventExecutor newChild(Executor executor, Object... args) throws Exception;
 

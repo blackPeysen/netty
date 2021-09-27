@@ -24,12 +24,10 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 
 /**
- * A {@link ChannelOption} allows to configure a {@link ChannelConfig} in a type-safe
- * way. Which {@link ChannelOption} is supported depends on the actual implementation
- * of {@link ChannelConfig} and may depend on the nature of the transport it belongs
- * to.
+ * {@link ChannelOption}允许在type-safe中配置一个{@link ChannelConfig}
+ *      哪个{@link ChannelOption}被支持取决于实际的实现的{@link ChannelConfig}，可能取决于它所属的传输的性质
  *
- * @param <T>   the type of the value which is valid for the {@link ChannelOption}
+ * @param <T>   对{@link ChannelOption}有效的值的类型
  */
 public class ChannelOption<T> extends AbstractConstant<ChannelOption<T>> {
 
@@ -134,7 +132,7 @@ public class ChannelOption<T> extends AbstractConstant<ChannelOption<T>> {
             valueOf("SINGLE_EVENTEXECUTOR_PER_GROUP");
 
     /**
-     * Creates a new {@link ChannelOption} with the specified unique {@code name}.
+     * 用指定的唯一的{@code name}创建一个新的{@link ChannelOption}。
      */
     private ChannelOption(int id, String name) {
         super(id, name);
@@ -146,8 +144,8 @@ public class ChannelOption<T> extends AbstractConstant<ChannelOption<T>> {
     }
 
     /**
-     * Validate the value which is set for the {@link ChannelOption}. Sub-classes
-     * may override this for special checks.
+     * 验证为{@link ChannelOption}设置的值。
+     *      子类可以在特殊检查时覆盖此选项。
      */
     public void validate(T value) {
         ObjectUtil.checkNotNull(value, "value");

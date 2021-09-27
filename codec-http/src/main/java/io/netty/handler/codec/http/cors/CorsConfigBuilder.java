@@ -29,7 +29,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 
 /**
- * Builder used to configure and build a {@link CorsConfig} instance.
+ * Builder用于配置和构建一个{@link CorsConfig}实例。
  */
 public final class CorsConfigBuilder {
 

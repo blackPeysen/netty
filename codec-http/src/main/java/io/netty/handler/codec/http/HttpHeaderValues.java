@@ -19,7 +19,7 @@ package io.netty.handler.codec.http;
 import io.netty.util.AsciiString;
 
 /**
- * Standard HTTP header values.
+ * 标准HTTP报头值。
  */
 public final class HttpHeaderValues {
     /**

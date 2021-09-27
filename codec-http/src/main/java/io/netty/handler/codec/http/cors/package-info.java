@@ -15,6 +15,6 @@
  */
 
 /**
- * This package contains Cross Origin Resource Sharing (CORS) related classes.
+ * 这个包包含跨源资源共享(CORS)相关类。
  */
 package io.netty.handler.codec.http.cors;

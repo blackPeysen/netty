@@ -30,7 +30,7 @@ import io.netty.util.NetUtil;
 import io.netty.util.internal.ObjectUtil;
 
 /**
- * Utility methods useful in the HTTP context.
+ * 在HTTP上下文中有用的实用程序方法。
  */
 public final class HttpUtil {
 

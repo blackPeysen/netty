@@ -27,7 +27,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadFactory;
 
 /**
- * Abstract base class for {@link EventLoop}s that execute all its submitted tasks in a single thread.
+ * {@link EventLoop}的抽象基类，它在一个线程中执行所有提交的任务。
  *
  */
 public abstract class SingleThreadEventLoop extends SingleThreadEventExecutor implements EventLoop {
@@ -78,12 +78,19 @@ public abstract class SingleThreadEventLoop extends SingleThreadEventExecutor im
 
     @Override
     public ChannelFuture register(Channel channel) {
+        /**
+         * this 作为Channel绑定的Executor 执行器
+         */
         return register(new DefaultChannelPromise(channel, this));
     }
 
     @Override
     public ChannelFuture register(final ChannelPromise promise) {
         ObjectUtil.checkNotNull(promise, "promise");
+        /**
+         * promise包含了channel
+         * this即EventLoop，包含了Selector
+         */
         promise.channel().unsafe().register(this, promise);
         return promise;
     }
@@ -98,7 +105,7 @@ public abstract class SingleThreadEventLoop extends SingleThreadEventExecutor im
     }
 
     /**
-     * Adds a task to be run once at the end of next (or current) {@code eventloop} iteration.
+     * 添加一个在下一次(或当前){@code eventloop}迭代结束时运行一次的任务。
      *
      * @param task to be added.
      */
@@ -119,11 +126,11 @@ public abstract class SingleThreadEventLoop extends SingleThreadEventExecutor im
     }
 
     /**
-     * Removes a task that was added previously via {@link #executeAfterEventLoopIteration(Runnable)}.
+     * 移除之前通过{@link #executeAfterEventLoopIteration(Runnable)}添加的任务。
      *
      * @param task to be removed.
      *
-     * @return {@code true} if the task was removed as a result of this call.
+     * @return {@code true} 如果此调用导致任务被删除。
      */
     @UnstableApi
     final boolean removeAfterEventLoopIterationTask(Runnable task) {
@@ -146,9 +153,9 @@ public abstract class SingleThreadEventLoop extends SingleThreadEventExecutor im
     }
 
     /**
-     * Returns the number of {@link Channel}s registered with this {@link EventLoop} or {@code -1}
-     * if operation is not supported. The returned value is not guaranteed to be exact accurate and
-     * should be viewed as a best effort.
+     * 返回在这个{@link EventLoop}或{@code -1}中注册的{@link Channel}的数量
+     * 如果不支持操作。返回值不能保证是精确的
+     * 应该被视为是最好的努力。
      */
     @UnstableApi
     public int registeredChannels() {

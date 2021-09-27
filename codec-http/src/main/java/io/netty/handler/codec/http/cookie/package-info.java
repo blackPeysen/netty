@@ -15,6 +15,6 @@
  */
 
 /**
- * This package contains Cookie related classes.
+ * 这个包包含与Cookie相关的类。
  */
 package io.netty.handler.codec.http.cookie;

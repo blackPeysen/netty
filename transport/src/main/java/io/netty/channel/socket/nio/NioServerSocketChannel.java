@@ -40,8 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A {@link io.netty.channel.socket.ServerSocketChannel} implementation which uses
- * NIO selector based implementation to accept new connections.
+ * 一个{@link io.netty.channel.socket.ServerSocketChannel}实现使用基于NIO选择器的实现，以接受新的连接。
  */
 public class NioServerSocketChannel extends AbstractNioMessageChannel
                              implements io.netty.channel.socket.ServerSocketChannel {
@@ -51,6 +50,12 @@ public class NioServerSocketChannel extends AbstractNioMessageChannel
 
     private static final InternalLogger logger = InternalLoggerFactory.getInstance(NioServerSocketChannel.class);
 
+    /**
+     * 通过SelectorProvider 生成 jdk原生的ServerSocketChannel
+     *
+     * @param provider
+     * @return
+     */
     private static ServerSocketChannel newSocket(SelectorProvider provider) {
         try {
             /**
@@ -83,7 +88,7 @@ public class NioServerSocketChannel extends AbstractNioMessageChannel
     }
 
     /**
-     * Create a new instance using the given {@link ServerSocketChannel}.
+     * 使用给定的{@link ServerSocketChannel}创建一个新实例。
      */
     public NioServerSocketChannel(ServerSocketChannel channel) {
         super(null, channel, SelectionKey.OP_ACCEPT);

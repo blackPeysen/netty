@@ -19,7 +19,7 @@ package io.netty.channel;
 import io.netty.util.concurrent.AbstractEventExecutorGroup;
 
 /**
- * Skeletal implementation of {@link EventLoopGroup}.
+ * {@link EventLoopGroup}的骨架实现。
  */
 public abstract class AbstractEventLoopGroup extends AbstractEventExecutorGroup implements EventLoopGroup {
     @Override

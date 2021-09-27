@@ -21,7 +21,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Default implementation which uses simple round-robin to choose next {@link EventExecutor}.
+ * 用于EventLoopGroup中如何选择下一个EventLoop
+ *
+ * 默认实现使用简单的轮询来选择下一步{@link EventExecutor}。
  */
 @UnstableApi
 public final class DefaultEventExecutorChooserFactory implements EventExecutorChooserFactory {
@@ -30,6 +32,12 @@ public final class DefaultEventExecutorChooserFactory implements EventExecutorCh
 
     private DefaultEventExecutorChooserFactory() { }
 
+    /**
+     * 根据executors的个数选用不同的轮询器
+     *
+     * @param executors
+     * @return
+     */
     @Override
     public EventExecutorChooser newChooser(EventExecutor[] executors) {
         if (isPowerOfTwo(executors.length)) {
@@ -39,10 +47,20 @@ public final class DefaultEventExecutorChooserFactory implements EventExecutorCh
         }
     }
 
+    /**
+     * 一个整数是否为2的幂
+     *
+     * @param val
+     * @return
+     */
     private static boolean isPowerOfTwo(int val) {
         return (val & -val) == val;
     }
 
+    /**
+     * 通过按位与(&)操作符进行选取, 与运算效率更高
+     *
+     */
     private static final class PowerOfTwoEventExecutorChooser implements EventExecutorChooser {
         private final AtomicInteger idx = new AtomicInteger();
         private final EventExecutor[] executors;
@@ -57,10 +75,15 @@ public final class DefaultEventExecutorChooserFactory implements EventExecutorCh
         }
     }
 
+    /**
+     * 通过取模(%)运算符进行选取
+     *
+     * 记录一个原子的计数器idx，每次使用后递增+1，然后取余，
+     */
     private static final class GenericEventExecutorChooser implements EventExecutorChooser {
-        // Use a 'long' counter to avoid non-round-robin behaviour at the 32-bit overflow boundary.
-        // The 64-bit long solves this by placing the overflow so far into the future, that no system
-        // will encounter this in practice.
+        // 使用“long”计数器来避免在32位溢出边界的非轮询行为。
+        // 64位long通过将溢出放置到很远的未来来解决这个问题，没有系统
+        // 将在实践中遇到这个问题。
         private final AtomicLong idx = new AtomicLong();
         private final EventExecutor[] executors;
 

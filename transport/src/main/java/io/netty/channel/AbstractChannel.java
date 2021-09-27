@@ -38,7 +38,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.RejectedExecutionException;
 
 /**
- * A skeletal {@link Channel} implementation.
+ * 一个骨架的{@link Channel}实现。
  */
 public abstract class AbstractChannel extends DefaultAttributeMap implements Channel {
 
@@ -94,8 +94,8 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
     }
 
     /**
-     * Returns a new {@link DefaultChannelId} instance. Subclasses may override this method to assign custom
-     * {@link ChannelId}s to {@link Channel}s that use the {@link AbstractChannel#AbstractChannel(Channel)} constructor.
+     * 返回一个新的{@link DefaultChannelId}实例。
+     * 子类可以重写此方法来指定自定义,使用{@link AbstractChannel#AbstractChannel(Channel)}构造函数的{@link ChannelId}到{@link Channel}。
      */
     protected ChannelId newId() {
         return DefaultChannelId.newInstance();
@@ -449,9 +449,19 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
             return remoteAddress0();
         }
 
+        /**
+         * 这里就是将SocketChannel注册到EventLoop中的Selector上
+         *
+         * @param eventLoop
+         * @param promise
+         */
         @Override
         public final void register(EventLoop eventLoop, final ChannelPromise promise) {
             ObjectUtil.checkNotNull(eventLoop, "eventLoop");
+
+            /**
+             * 判断是否被注册过了
+             */
             if (isRegistered()) {
                 promise.setFailure(new IllegalStateException("registered to an event loop already"));
                 return;
@@ -485,10 +495,14 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
             }
         }
 
+        /**
+         * 这里将Channel注册到Selector
+         *
+         * @param promise
+         */
         private void register0(ChannelPromise promise) {
             try {
-                // check if the channel is still open as it could be closed in the mean time when the register
-                // call was outside of the eventLoop
+                // 检查通道是否仍然是打开的，因为它可以在注册的同时关闭调用是在eventLoop的外部
                 if (!promise.setUncancellable() || !ensureOpen(promise)) {
                     return;
                 }
@@ -497,14 +511,14 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
                 neverRegistered = false;
                 registered = true;
 
-                // Ensure we call handlerAdded(...) before we actually notify the promise. This is needed as the
-                // user may already fire events through the pipeline in the ChannelFutureListener.
+                // 确保我们在实际通知承诺之前调用了handlerAdded(…)。
+                // 这是需要的用户可能已经通过ChannelFutureListener中的管道触发了事件。
                 pipeline.invokeHandlerAddedIfNeeded();
 
                 safeSetSuccess(promise);
                 pipeline.fireChannelRegistered();
-                // Only fire a channelActive if the channel has never been registered. This prevents firing
-                // multiple channel actives if the channel is deregistered and re-registered.
+                // 只有在通道从未注册的情况下才触发channelActive。
+                // 这可以防止解雇多个通道激活，如果通道被注销和重新注册。
                 if (isActive()) {
                     if (firstRegistration) {
                         pipeline.fireChannelActive();
@@ -1081,9 +1095,9 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
     protected abstract SocketAddress remoteAddress0();
 
     /**
-     * Is called after the {@link Channel} is registered with its {@link EventLoop} as part of the register process.
+     * 在将{@link Channel}注册到其{@link EventLoop}之后调用，作为注册过程的一部分。
      *
-     * Sub-classes may override this method
+     * 子类可以重写这个方法
      */
     protected void doRegister() throws Exception {
         // NOOP

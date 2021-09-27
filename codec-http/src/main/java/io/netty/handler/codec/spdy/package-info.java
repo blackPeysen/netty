@@ -14,6 +14,6 @@
  * under the License.
  */
 /**
- * Encoder, decoder, session handler and their related message types for the SPDY protocol.
+ * SPDY协议的编码器、解码器、会话处理程序及其相关的消息类型。
  */
 package io.netty.handler.codec.spdy;

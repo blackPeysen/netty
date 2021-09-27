@@ -21,7 +21,7 @@ import java.util.Deque;
 import java.util.PriorityQueue;
 
 /**
- * Description of algorithm for PageRun/PoolSubpage allocation from PoolChunk
+ * 从PoolChunk分配PageRun/PoolSubpage的算法描述
  *
  * Notation: The following terms are important to understand the code
  * > page  - a page is the smallest unit of memory chunk that can be allocated

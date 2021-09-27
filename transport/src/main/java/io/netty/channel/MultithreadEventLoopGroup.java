@@ -27,8 +27,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadFactory;
 
 /**
- * Abstract base class for {@link EventLoopGroup} implementations that handles their tasks with multiple threads at
- * the same time.
+ * {@link EventLoopGroup}实现的抽象基类，使用多个线程处理它们的任务同一时间。
  */
 public abstract class MultithreadEventLoopGroup extends MultithreadEventExecutorGroup implements EventLoopGroup {
 
@@ -81,6 +80,12 @@ public abstract class MultithreadEventLoopGroup extends MultithreadEventExecutor
     @Override
     protected abstract EventLoop newChild(Executor executor, Object... args) throws Exception;
 
+    /**
+     * 将对应的SocketChannel注册到自己的Selector上，即EventLoop
+     *
+     * @param channel
+     * @return
+     */
     @Override
     public ChannelFuture register(Channel channel) {
         return next().register(channel);

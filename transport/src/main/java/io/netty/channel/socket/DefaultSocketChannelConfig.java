@@ -32,7 +32,7 @@ import java.util.Map;
 import static io.netty.channel.ChannelOption.*;
 
 /**
- * The default {@link SocketChannelConfig} implementation.
+ * 默认的{@link SocketChannelConfig}实现。
  */
 public class DefaultSocketChannelConfig extends DefaultChannelConfig
                                         implements SocketChannelConfig {

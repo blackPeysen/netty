@@ -44,7 +44,7 @@ import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
 /**
- * Abstract base class for {@link OrderedEventExecutor}'s that execute all its submitted tasks in a single thread.
+ * {@link OrderedEventExecutor}的抽象基类，它在一个线程中执行所有提交的任务。
  *
  */
 public abstract class SingleThreadEventExecutor extends AbstractScheduledEventExecutor implements OrderedEventExecutor {
@@ -55,7 +55,9 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
     private static final InternalLogger logger =
             InternalLoggerFactory.getInstance(SingleThreadEventExecutor.class);
 
+    // 未开始处理状态
     private static final int ST_NOT_STARTED = 1;
+    // 开始处理状态
     private static final int ST_STARTED = 2;
     private static final int ST_SHUTTING_DOWN = 3;
     private static final int ST_SHUTDOWN = 4;
@@ -100,12 +102,11 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
     private final Promise<?> terminationFuture = new DefaultPromise<Void>(GlobalEventExecutor.INSTANCE);
 
     /**
-     * Create a new instance
+     * 创建一个新实例
      *
-     * @param parent            the {@link EventExecutorGroup} which is the parent of this instance and belongs to it
-     * @param threadFactory     the {@link ThreadFactory} which will be used for the used {@link Thread}
-     * @param addTaskWakesUp    {@code true} if and only if invocation of {@link #addTask(Runnable)} will wake up the
-     *                          executor thread
+     * @param parent            {@link EventExecutorGroup}是这个实例的父类，并且属于它
+     * @param threadFactory     {@link ThreadFactory}将用于已使用的{@link Thread}
+     * @param addTaskWakesUp    {@code true}当且仅当调用{@link #addTask(Runnable)}将唤醒遗嘱执行人的线程
      */
     protected SingleThreadEventExecutor(
             EventExecutorGroup parent, ThreadFactory threadFactory, boolean addTaskWakesUp) {
@@ -113,14 +114,13 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
     }
 
     /**
-     * Create a new instance
+     * 创建一个新实例
      *
-     * @param parent            the {@link EventExecutorGroup} which is the parent of this instance and belongs to it
-     * @param threadFactory     the {@link ThreadFactory} which will be used for the used {@link Thread}
-     * @param addTaskWakesUp    {@code true} if and only if invocation of {@link #addTask(Runnable)} will wake up the
-     *                          executor thread
-     * @param maxPendingTasks   the maximum number of pending tasks before new tasks will be rejected.
-     * @param rejectedHandler   the {@link RejectedExecutionHandler} to use.
+     * @param parent            {@link EventExecutorGroup}是这个实例的父类，并且属于它
+     * @param threadFactory     {@link ThreadFactory}将用于已使用的{@link Thread}
+     * @param addTaskWakesUp    @code true}当且仅当调用{@link #addTask(Runnable)}将唤醒遗嘱执行人的线程
+     * @param maxPendingTasks   新任务将被拒绝之前挂起的任务的最大数目。
+     * @param rejectedHandler   {@link RejectedExecutionHandler}要使用。
      */
     protected SingleThreadEventExecutor(
             EventExecutorGroup parent, ThreadFactory threadFactory,
@@ -129,26 +129,24 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
     }
 
     /**
-     * Create a new instance
+     * 创建一个新实例
      *
-     * @param parent            the {@link EventExecutorGroup} which is the parent of this instance and belongs to it
-     * @param executor          the {@link Executor} which will be used for executing
-     * @param addTaskWakesUp    {@code true} if and only if invocation of {@link #addTask(Runnable)} will wake up the
-     *                          executor thread
+     * @param parent            {@link EventExecutorGroup}是这个实例的父类，并且属于它
+     * @param executor          {@link Executor}将用于执行
+     * @param addTaskWakesUp    {@code true}当且仅当调用{@link #addTask(Runnable)}将唤醒遗嘱执行人的线程
      */
     protected SingleThreadEventExecutor(EventExecutorGroup parent, Executor executor, boolean addTaskWakesUp) {
         this(parent, executor, addTaskWakesUp, DEFAULT_MAX_PENDING_EXECUTOR_TASKS, RejectedExecutionHandlers.reject());
     }
 
     /**
-     * Create a new instance
+     * 创建一个新实例
      *
-     * @param parent            the {@link EventExecutorGroup} which is the parent of this instance and belongs to it
-     * @param executor          the {@link Executor} which will be used for executing
-     * @param addTaskWakesUp    {@code true} if and only if invocation of {@link #addTask(Runnable)} will wake up the
-     *                          executor thread
-     * @param maxPendingTasks   the maximum number of pending tasks before new tasks will be rejected.
-     * @param rejectedHandler   the {@link RejectedExecutionHandler} to use.
+     * @param parent            {@link EventExecutorGroup}是这个实例的父类，并且属于它
+     * @param executor          {@link Executor}将用于执行
+     * @param addTaskWakesUp    {@code true}当且仅当调用{@link #addTask(Runnable)}将唤醒遗嘱执行人的线程
+     * @param maxPendingTasks   新任务将被拒绝之前挂起的任务的最大数目。
+     * @param rejectedHandler   {@link RejectedExecutionHandler}要使用。
      */
     protected SingleThreadEventExecutor(EventExecutorGroup parent, Executor executor,
                                         boolean addTaskWakesUp, int maxPendingTasks,
@@ -173,7 +171,7 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
     }
 
     /**
-     * @deprecated Please use and override {@link #newTaskQueue(int)}.
+     * @deprecated 请使用并覆盖{@link #newTaskQueue(int)}。
      */
     @Deprecated
     protected Queue<Runnable> newTaskQueue() {
@@ -537,7 +535,7 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
     }
 
     /**
-     * Run the tasks in the {@link #taskQueue}
+     * 运行{@link #taskQueue}中的任务
      */
     protected abstract void run();
 
@@ -824,6 +822,10 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
     }
 
     private void execute(Runnable task, boolean immediate) {
+        /**
+         * 判断task是否在当前线程中进行处理
+         *      若不是，则使用executor创建一个新线程进行处理
+         */
         boolean inEventLoop = inEventLoop();
         addTask(task);
         if (!inEventLoop) {
@@ -884,9 +886,8 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
     }
 
     /**
-     * Returns the {@link ThreadProperties} of the {@link Thread} that powers the {@link SingleThreadEventExecutor}.
-     * If the {@link SingleThreadEventExecutor} is not started yet, this operation will start it and block until
-     * it is fully started.
+     * 返回驱动SingleThreadEventExecutor的{@link Thread}的{@link ThreadProperties}。
+     *  如果{@link SingleThreadEventExecutor}尚未启动，该操作将启动它并阻塞直到它完全启动了。
      */
     public final ThreadProperties threadProperties() {
         ThreadProperties threadProperties = this.threadProperties;
@@ -939,6 +940,10 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
 
     private static final long SCHEDULE_PURGE_INTERVAL = TimeUnit.SECONDS.toNanos(1);
 
+    /**
+     * 开启一个线程，用于处理客户端事件，并将当前EventLoop置为ST_STARTED状态
+     * {@link #doStartThread()}
+     */
     private void startThread() {
         if (state == ST_NOT_STARTED) {
             if (STATE_UPDATER.compareAndSet(this, ST_NOT_STARTED, ST_STARTED)) {
@@ -973,6 +978,10 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
         return false;
     }
 
+    /**
+     * executor 先会创建一个Thread，并设置给当前thread；
+     *      新增一个Runnable，用于执行{@link #run()}
+     */
     private void doStartThread() {
         assert thread == null;
         executor.execute(new Runnable() {

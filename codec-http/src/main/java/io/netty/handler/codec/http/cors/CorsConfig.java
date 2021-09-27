@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 
 /**
- * Configuration for Cross-Origin Resource Sharing (CORS).
+ * 配置跨源资源共享(CORS)。
  */
 public final class CorsConfig {
 

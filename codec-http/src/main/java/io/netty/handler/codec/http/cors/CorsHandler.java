@@ -43,8 +43,8 @@ import static io.netty.util.internal.ObjectUtil.checkNotNull;
 /**
  * Handles <a href="https://www.w3.org/TR/cors/">Cross Origin Resource Sharing</a> (CORS) requests.
  * <p>
- * This handler can be configured using one or more {@link CorsConfig}, please
- * refer to this class for details about the configuration options available.
+ * 这个处理程序可以使用一个或多个{@link CorsConfig}配置，
+ * 请有关可用配置选项的详细信息，请参阅该类。
  */
 public class CorsHandler extends ChannelDuplexHandler {
 

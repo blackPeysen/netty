@@ -15,7 +15,6 @@
  */
 
 /**
- * This package is intended to test the http2 implementation against the specification
- * using h2spec
+ * 这个包旨在根据规范测试http2实现使用h2spec
  */
 package io.netty.testsuite.http2;

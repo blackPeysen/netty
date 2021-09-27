@@ -52,7 +52,7 @@ import java.util.concurrent.Executor;
 import static io.netty.channel.internal.ChannelUtils.MAX_BYTES_PER_GATHERING_WRITE_ATTEMPTED_LOW_THRESHOLD;
 
 /**
- * {@link io.netty.channel.socket.SocketChannel} which uses NIO selector based implementation.
+ * {@link io.netty.channel.socket.SocketChannel}使用基于NIO选择器的实现。
  */
 public class NioSocketChannel extends AbstractNioByteChannel implements io.netty.channel.socket.SocketChannel {
     private static final InternalLogger logger = InternalLoggerFactory.getInstance(NioSocketChannel.class);
@@ -61,8 +61,8 @@ public class NioSocketChannel extends AbstractNioByteChannel implements io.netty
     private static SocketChannel newSocket(SelectorProvider provider) {
         try {
             /**
-             *  Use the {@link SelectorProvider} to open {@link SocketChannel} and so remove condition in
-             *  {@link SelectorProvider#provider()} which is called by each SocketChannel.open() otherwise.
+             *  使用{@link SelectorProvider}打开{@link SocketChannel}，
+             *  因此删除条件{@link SelectorProvider#provider()}由每个SocketChannel.open()调用，否则。
              *
              *  See <a href="https://github.com/netty/netty/issues/2308">#2308</a>.
              */
@@ -98,8 +98,8 @@ public class NioSocketChannel extends AbstractNioByteChannel implements io.netty
     /**
      * Create a new instance
      *
-     * @param parent    the {@link Channel} which created this instance or {@code null} if it was created by the user
-     * @param socket    the {@link SocketChannel} which will be used
+     * @param parent    创建此实例的{@link Channel}或{@code null}，如果它是由用户创建的
+     * @param socket    {@link SocketChannel}将被使用
      */
     public NioSocketChannel(Channel parent, SocketChannel socket) {
         super(parent, socket);

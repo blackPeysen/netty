@@ -20,7 +20,7 @@ import io.netty.channel.Channel;
 import java.net.InetSocketAddress;
 
 /**
- * A TCP/IP socket {@link Channel}.
+ * 一个TCP/IP套接字{@link通道}。
  */
 public interface SocketChannel extends DuplexChannel {
     @Override

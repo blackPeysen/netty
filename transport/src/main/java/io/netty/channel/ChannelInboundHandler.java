@@ -56,7 +56,7 @@ public interface ChannelInboundHandler extends ChannelHandler {
     void channelReadComplete(ChannelHandlerContext ctx) throws Exception;
 
     /**
-     * Gets called if an user event was triggered.
+     * 在触发用户事件时调用。
      */
     void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception;
 

@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@link AbstractNioChannel} base class for {@link Channel}s that operate on messages.
+ * 用于操作消息的{@link Channel}的基类。
  */
 public abstract class AbstractNioMessageChannel extends AbstractNioChannel {
     boolean inputShutdown;

@@ -25,16 +25,14 @@ import io.netty.util.concurrent.EventExecutor;
 import java.nio.channels.Channels;
 
 /**
- * Enables a {@link ChannelHandler} to interact with its {@link ChannelPipeline}
- * and other handlers. Among other things a handler can notify the next {@link ChannelHandler} in the
- * {@link ChannelPipeline} as well as modify the {@link ChannelPipeline} it belongs to dynamically.
+ * 使一个{@link ChannelHandler}与它的{@link ChannelPipeline}交互和其他处理程序。
+ *      函数中的下一个{@link ChannelHandler}、{@link ChannelPipeline}以及动态修改它所属的{@link ChannelPipeline}。
  *
  * <h3>Notify</h3>
  *
- * You can notify the closest handler in the same {@link ChannelPipeline} by calling one of the various methods
- * provided here.
+ * 你可以通过调用各种方法之一来通知同一个{@link ChannelPipeline}中最接近的处理程序这里提供。
  *
- * Please refer to {@link ChannelPipeline} to understand how an event flows.
+ * 请参考{@link ChannelPipeline}了解事件如何流动。
  *
  * <h3>Modifying a pipeline</h3>
  *
@@ -62,7 +60,7 @@ import java.nio.channels.Channels;
  * }
  * </pre>
  *
- * <h3>Storing stateful information</h3>
+ * <h3>存储状态信息</h3>
  *
  * {@link #attr(AttributeKey)} allow you to
  * store and access stateful information that is related with a {@link ChannelHandler} / {@link Channel} and its
@@ -79,7 +77,7 @@ import java.nio.channels.Channels;
  * Also note that a {@link ChannelHandler} that is supposed to be added to multiple {@link ChannelPipeline}s should
  * be marked as {@link io.netty.channel.ChannelHandler.Sharable}.
  *
- * <h3>Additional resources worth reading</h3>
+ * <h3>其他值得阅读的资源</h3>
  * <p>
  * Please refer to the {@link ChannelHandler}, and
  * {@link ChannelPipeline} to find out more about inbound and outbound operations,

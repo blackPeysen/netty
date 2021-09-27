@@ -39,19 +39,23 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
- * {@link Bootstrap} sub-class which allows easy bootstrap of {@link ServerChannel}
- *
+ * 允许简单引导{@link ServerChannel}的{@link Bootstrap}子类
  */
 public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerChannel> {
 
     private static final InternalLogger logger = InternalLoggerFactory.getInstance(ServerBootstrap.class);
 
-    // The order in which child ChannelOptions are applied is important they may depend on each other for validation
-    // purposes.
+    // 子ChannelOptions的应用顺序很重要，它们在验证时可能相互依赖目的。
     private final Map<ChannelOption<?>, Object> childOptions = new LinkedHashMap<ChannelOption<?>, Object>();
+    // 子Channel 的属性Map
     private final Map<AttributeKey<?>, Object> childAttrs = new ConcurrentHashMap<AttributeKey<?>, Object>();
+    //
     private final ServerBootstrapConfig config = new ServerBootstrapConfig(this);
+
+    // worker线程组
     private volatile EventLoopGroup childGroup;
+
+    // channle通道处理器
     private volatile ChannelHandler childHandler;
 
     public ServerBootstrap() { }
@@ -67,7 +71,7 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
     }
 
     /**
-     * Specify the {@link EventLoopGroup} which is used for the parent (acceptor) and the child (client).
+     * 指定用于父(接受器)和子(客户端)的{@link EventLoopGroup}。
      */
     @Override
     public ServerBootstrap group(EventLoopGroup group) {
@@ -75,9 +79,8 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
     }
 
     /**
-     * Set the {@link EventLoopGroup} for the parent (acceptor) and the child (client). These
-     * {@link EventLoopGroup}'s are used to handle all the events and IO for {@link ServerChannel} and
-     * {@link Channel}'s.
+     * 为父(接受器)和子(客户端)设置{@link EventLoopGroup}。
+     * 这些{@link EventLoopGroup}用于处理{@link ServerChannel}和的所有事件和IO{@link Channel}。
      */
     public ServerBootstrap group(EventLoopGroup parentGroup, EventLoopGroup childGroup) {
         super.group(parentGroup);
@@ -89,9 +92,8 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
     }
 
     /**
-     * Allow to specify a {@link ChannelOption} which is used for the {@link Channel} instances once they get created
-     * (after the acceptor accepted the {@link Channel}). Use a value of {@code null} to remove a previous set
-     * {@link ChannelOption}.
+     * 允许指定一个{@link ChannelOption}，用于创建{@link Channel}实例(在接受{@link Channel}之后)。
+     * 使用{@code null}的值来删除以前的集合{@link ChannelOption}。
      */
     public <T> ServerBootstrap childOption(ChannelOption<T> childOption, T value) {
         ObjectUtil.checkNotNull(childOption, "childOption");
@@ -106,8 +108,8 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
     }
 
     /**
-     * Set the specific {@link AttributeKey} with the given value on every child {@link Channel}. If the value is
-     * {@code null} the {@link AttributeKey} is removed
+     * 在每个子{@link Channel}上使用给定值设置特定的{@link AttributeKey}。
+     *      如果值为{@code null} {@link AttributeKey}被删除
      */
     public <T> ServerBootstrap childAttr(AttributeKey<T> childKey, T value) {
         ObjectUtil.checkNotNull(childKey, "childKey");
@@ -120,18 +122,33 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
     }
 
     /**
-     * Set the {@link ChannelHandler} which is used to serve the request for the {@link Channel}'s.
+     * 设置用于为{@link Channel}的请求提供服务的{@link ChannelHandler}。
      */
     public ServerBootstrap childHandler(ChannelHandler childHandler) {
         this.childHandler = ObjectUtil.checkNotNull(childHandler, "childHandler");
         return this;
     }
 
+    /**
+     *
+     * 对服务端SocketChannel【NioServerSocketChannel】进行初始化操作：
+     *  1、setChannelOptions():设置Options
+     *  2、setAttributes():设置Attributes
+     *  3、设置pipeline:
+     *          因为是NioServerSocketChannel，相当于是SocketChannel，只需监听ACCPET事件
+     *          新增对应的ServerBootstrapAcceptor
+     *
+     * @param channel
+     */
     @Override
     void init(Channel channel) {
+        /**
+         * 给channler设置对应的options和attr属性
+         */
         setChannelOptions(channel, newOptionsArray(), logger);
         setAttributes(channel, attrs0().entrySet().toArray(EMPTY_ATTRIBUTE_ARRAY));
 
+        // 获取该通道对应的ChannlePipeline，并在下面进行初始化
         ChannelPipeline p = channel.pipeline();
 
         final EventLoopGroup currentChildGroup = childGroup;
@@ -142,6 +159,11 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
         }
         final Entry<AttributeKey<?>, Object>[] currentChildAttrs = childAttrs.entrySet().toArray(EMPTY_ATTRIBUTE_ARRAY);
 
+        /**
+         * 给当前SocketChannel新增对应的ChannelHandler:
+         *      但不是立马添加，而是等待当前Channel成功注册到Selecotr才会触发{@link ChannelInitializer#initChannel()}
+         *
+         */
         p.addLast(new ChannelInitializer<Channel>() {
             @Override
             public void initChannel(final Channel ch) {
@@ -151,6 +173,12 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
                     pipeline.addLast(handler);
                 }
 
+                /**
+                 * 这里为什么要使用线程池异步执行？
+                 *      我们通过EventLoop添加这个处理器，因为用户可能已经使用了ChannelInitializer作为处理器。
+                 *      在这种情况下，initChannel(…)方法只有在该方法返回后才会被调用。
+                 *      因为我们需要确保我们以延迟的方式添加我们的处理程序，以便所有的用户处理程序放置在ServerBootstrapAcceptor的前面
+                 */
                 ch.eventLoop().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -175,6 +203,9 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
         return this;
     }
 
+    /**
+     * 服务器端用于监听ACCPET事件的Handler处理器
+     */
     private static class ServerBootstrapAcceptor extends ChannelInboundHandlerAdapter {
 
         private final EventLoopGroup childGroup;
@@ -191,9 +222,9 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
             this.childOptions = childOptions;
             this.childAttrs = childAttrs;
 
-            // Task which is scheduled to re-enable auto-read.
-            // It's important to create this Runnable before we try to submit it as otherwise the URLClassLoader may
-            // not be able to load the class because of the file limit it already reached.
+            // 计划重新启用自动读取的任务。
+            // 在我们试图提交它之前创建这个Runnable是很重要的，否则URLClassLoader可能会提交它
+            // 无法加载类，因为它已经达到了文件限制。
             //
             // See https://github.com/netty/netty/issues/1328
             enableAutoReadTask = new Runnable() {
@@ -204,6 +235,15 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
             };
         }
 
+        /**
+         * 处理入站事件：即客户端与服务端建立事件
+         *      1、将Channel进行配置，设置之后入站事件的处理器childHandler
+         *      2、配置Options和Attributes
+         *      3、将Channel注册到childGroup上，并添加监听器
+         *
+         * @param ctx
+         * @param msg
+         */
         @Override
         @SuppressWarnings("unchecked")
         public void channelRead(ChannelHandlerContext ctx, Object msg) {
@@ -215,6 +255,9 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
             setAttributes(child, childAttrs);
 
             try {
+                /**
+                 * 将建立建立的请求socker注册到worker线程组中，由worker进行监听其读写事件
+                 */
                 childGroup.register(child).addListener(new ChannelFutureListener() {
                     @Override
                     public void operationComplete(ChannelFuture future) throws Exception {
@@ -255,8 +298,7 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
     }
 
     /**
-     * Return the configured {@link EventLoopGroup} which will be used for the child channels or {@code null}
-     * if non is configured yet.
+     * 返回配置的{@link EventLoopGroup}，它将用于子通道或{@code null}如果没有配置。
      *
      * @deprecated Use {@link #config()} instead.
      */

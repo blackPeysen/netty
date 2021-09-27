@@ -57,17 +57,17 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
     private boolean inputClosedSeenErrorOnRead;
 
     /**
-     * Create a new instance
+     * 创建一个新实例
      *
-     * @param parent            the parent {@link Channel} by which this instance was created. May be {@code null}
-     * @param ch                the underlying {@link SelectableChannel} on which it operates
+     * @param parent            创建此实例的父级{@link Channel}。可能是{@code null}
+     * @param ch                它操作的底层{@link SelectableChannel}
      */
     protected AbstractNioByteChannel(Channel parent, SelectableChannel ch) {
         super(parent, ch, SelectionKey.OP_READ);
     }
 
     /**
-     * Shutdown the input side of the channel.
+     * 关闭通道的输入端。
      */
     protected abstract ChannelFuture shutdownInput();
 

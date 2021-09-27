@@ -15,6 +15,6 @@
  */
 
 /**
- * Encoder, decoder and their related message types for HTTP.
+ * HTTP的编码器、解码器及其相关消息类型。
  */
 package io.netty.handler.codec.http;

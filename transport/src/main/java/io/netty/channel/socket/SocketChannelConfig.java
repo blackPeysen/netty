@@ -26,12 +26,11 @@ import java.net.Socket;
 import java.net.StandardSocketOptions;
 
 /**
- * A {@link ChannelConfig} for a {@link SocketChannel}.
+ *一个{@link SocketChannel}的{@link ChannelConfig}。
  *
- * <h3>Available options</h3>
+ * <h3>可用选项</h3>
  *
- * In addition to the options provided by {@link DuplexChannelConfig},
- * {@link SocketChannelConfig} allows the following options in the option map:
+ * 除了由{@link DuplexChannelConfig}提供的选项之外，{@link SocketChannelConfig}允许在选项映射中使用以下选项:
  *
  * <table border="1" cellspacing="0" cellpadding="6">
  * <tr>
@@ -58,10 +57,9 @@ import java.net.StandardSocketOptions;
 public interface SocketChannelConfig extends DuplexChannelConfig {
 
     /**
-     * Gets the {@link StandardSocketOptions#TCP_NODELAY} option.  Please note that the default value of this option
-     * is {@code true} unlike the operating system default ({@code false}). However, for some buggy platforms, such as
-     * Android, that shows erratic behavior with Nagle's algorithm disabled, the default value remains to be
-     * {@code false}.
+     * 获取{@link StandardSocketOptions#TCP_NODELAY}选项。
+     * 请注意此选项的默认值是{@code true}不同于操作系统默认({@code false})。
+     * 然而，对于一些有bug的平台，例如 Android，当禁用Nagle算法时，显示不稳定的行为，默认值仍然是{@code false}。
      */
     boolean isTcpNoDelay();
 
