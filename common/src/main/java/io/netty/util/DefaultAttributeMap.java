@@ -22,9 +22,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
 /**
- * Default {@link AttributeMap} implementation which not exibit any blocking behaviour on attribute lookup while using a
- * copy-on-write approach on the modify path.<br> Attributes lookup and remove exibit {@code O(logn)} time worst-case
- * complexity, hence {@code attribute::set(null)} is to be preferred to {@code remove}.
+ * 默认的{@link AttributeMap}实现在使用属性查找时不显示任何阻塞行为
+ * 修改路径上的“写时拷贝”方法。<br>属性查找和删除显示{@code O(logn)}时间最坏情况复杂度，
+ * 因此{@code attribute::set(null)}要优于{@code remove}。
  */
 public class DefaultAttributeMap implements AttributeMap {
 

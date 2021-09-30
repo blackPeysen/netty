@@ -15,7 +15,7 @@
  */
 
 /**
- * An alternative to Java's built-in domain name lookup mechanism that resolves a domain name asynchronously,
- * which supports the queries of an arbitrary DNS record type as well.
+ * Java内置域名查找机制的一个替代方案，异步解析域名，
+ *      支持任意DNS记录类型的查询。
  */
 package io.netty.resolver.dns;

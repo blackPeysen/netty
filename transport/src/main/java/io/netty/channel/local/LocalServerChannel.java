@@ -31,7 +31,7 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 
 /**
- * A {@link ServerChannel} for the local transport which allows in VM communication.
+ * 用于本地传输的{@link ServerChannel}允许VM通信。
  */
 public class LocalServerChannel extends AbstractServerChannel {
 

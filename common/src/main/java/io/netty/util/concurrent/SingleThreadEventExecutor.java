@@ -825,11 +825,16 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
         /**
          * 判断task是否在当前线程中进行处理
          *      若不是，则使用executor创建一个新线程进行处理
+         *      当前线程是单例的，只能被启动一次
          */
         boolean inEventLoop = inEventLoop();
         addTask(task);
         if (!inEventLoop) {
             startThread();
+
+            /**
+             * 如果线程停止，并且删除任务失败，就执行拒绝策略，默认抛出异常
+             */
             if (isShutdown()) {
                 boolean reject = false;
                 try {

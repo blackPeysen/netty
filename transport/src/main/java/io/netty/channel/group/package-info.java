@@ -15,7 +15,6 @@
  */
 
 /**
- * A channel registry which helps a user maintain the list of open
- * {@link io.netty.channel.Channel}s and perform bulk operations on them.
+ * 一个通道注册表，帮助用户维护打开列表{@link io.netty.channel.Channel}并对它们执行大容量操作。
  */
 package io.netty.channel.group;

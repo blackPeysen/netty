@@ -49,7 +49,7 @@ public final class DefaultChannelId implements ChannelId {
     private static final AtomicInteger nextSequence = new AtomicInteger();
 
     /**
-     * Returns a new {@link DefaultChannelId} instance.
+     * 返回一个新的{@link DefaultChannelId}实例。
      */
     public static DefaultChannelId newInstance() {
         return new DefaultChannelId();

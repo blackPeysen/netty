@@ -25,8 +25,7 @@ import java.nio.charset.CodingErrorAction;
 import java.util.Map;
 
 /**
- * A utility class that provides various common operations and constants
- * related with {@link Charset} and its relevant classes.
+ * 提供各种通用操作和常量的实用程序类与{@link Charset}及其相关类相关。
  */
 public final class CharsetUtil {
 

@@ -96,7 +96,7 @@ public class NioSocketChannel extends AbstractNioByteChannel implements io.netty
     }
 
     /**
-     * Create a new instance
+     * 创建一个新实例
      *
      * @param parent    创建此实例的{@link Channel}或{@code null}，如果它是由用户创建的
      * @param socket    {@link SocketChannel}将被使用

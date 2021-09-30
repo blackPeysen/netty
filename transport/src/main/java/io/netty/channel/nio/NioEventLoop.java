@@ -51,13 +51,12 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * {@link SingleThreadEventLoop}实现，它将{@link Channel}注册到{@link Selector}，这些在事件循环中的多路复用也是如此。
- *
  */
 public final class NioEventLoop extends SingleThreadEventLoop {
 
     private static final InternalLogger logger = InternalLoggerFactory.getInstance(NioEventLoop.class);
 
-    private static final int CLEANUP_INTERVAL = 256; // XXX Hard-coded value, but won't need customization.
+    private static final int CLEANUP_INTERVAL = 256; // XXX 硬编码值，但不需要定制。
 
     private static final boolean DISABLE_KEY_SET_OPTIMIZATION =
             SystemPropertyUtil.getBoolean("io.netty.noKeySetOptimization", false);
@@ -72,7 +71,12 @@ public final class NioEventLoop extends SingleThreadEventLoop {
         }
     };
 
-    // Workaround for JDK NIO bug.
+    // JDK NIO错误的解决方案:
+    //      加载selector空轮询的次数阈值。
+    //      这里是为了处理linux epoll的bug，nio中是通过selector轮询io事件，selector的select方法会一直阻塞或者超时，
+    //      linux有时候会出现问题，有时候即使没有io事件到达或超时selector也会返回，这既是linux epoll的bug，
+    //      会导致线程进入死循环导致cup load 100%，netty定义了一个selector空轮询的次数阈值512，超过这个阈值重新构建selector，
+    //      将老的selector上的channel迁移到新的selector上，关闭老的selector。
     //
     // See:
     // - https://bugs.java.com/view_bug.do?bug_id=6427854
@@ -94,6 +98,9 @@ public final class NioEventLoop extends SingleThreadEventLoop {
             }
         }
 
+        //  selector空轮询次数阈值，避免linux的epoll bug
+        //  nio中是通过selector轮询io事件，selector的select方法会一直阻塞或者超时，linux有时候会出现问题，有时候即使没有io事件到达或超时selector也会返回，这既是linux epoll的bug，
+        //  会导致线程进入死循环导致cup load 100%，netty定义了一个selector空轮询的次数阈值512，超过这个阈值重新构建selector，将老的selector上的channel迁移到新的selector上，关闭老的selector
         int selectorAutoRebuildThreshold = SystemPropertyUtil.getInt("io.netty.selectorAutoRebuildThreshold", 512);
         if (selectorAutoRebuildThreshold < MIN_PREMATURE_SELECTOR_RETURNS) {
             selectorAutoRebuildThreshold = 0;
@@ -108,7 +115,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
     }
 
     /**
-     * The NIO {@link Selector}.
+     * NIO {@link Selector}
      */
     private Selector selector;
     private Selector unwrappedSelector;
@@ -125,6 +132,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
     //    other value T    when EL is waiting with wakeup scheduled at time T
     private final AtomicLong nextWakeupNanos = new AtomicLong(AWAKE);
 
+    // selectStrategy 选择策略，控制selector选择行为，有事件是立即处理还是延迟处理还是跳过。
     private final SelectStrategy selectStrategy;
 
     private volatile int ioRatio = 50;
@@ -138,6 +146,8 @@ public final class NioEventLoop extends SingleThreadEventLoop {
                 rejectedExecutionHandler);
         this.provider = ObjectUtil.checkNotNull(selectorProvider, "selectorProvider");
         this.selectStrategy = ObjectUtil.checkNotNull(strategy, "selectStrategy");
+
+        // 创建选择器
         final SelectorTuple selectorTuple = openSelector();
         this.selector = selectorTuple.selector;
         this.unwrappedSelector = selectorTuple.unwrappedSelector;
@@ -166,6 +176,13 @@ public final class NioEventLoop extends SingleThreadEventLoop {
         }
     }
 
+    /**
+     * 按io.netty.noKeySetOptimization属性值选择创建优化之前的selector还是优化之前的selector，
+     *      io.netty.noKeySetOptimization属性值默认是false。
+     *      io.netty.channel.nio.NioEventLoop#register注册selector选择器
+     *
+     * @return
+     */
     private SelectorTuple openSelector() {
         final Selector unwrappedSelector;
         try {
@@ -280,9 +297,8 @@ public final class NioEventLoop extends SingleThreadEventLoop {
     }
 
     /**
-     * Registers an arbitrary {@link SelectableChannel}, not necessarily created by Netty, to the {@link Selector}
-     * of this event loop.  Once the specified {@link SelectableChannel} is registered, the specified {@code task} will
-     * be executed by this event loop when the {@link SelectableChannel} is ready.
+     * 注册一个任意的{@link SelectableChannel}，不一定是由Netty创建的，到{@link Selector}的事件循环。
+     * 一旦指定的{@link SelectableChannel}被注册，指定的{@code NioTask}将会当{@link SelectableChannel}准备好时，将被此事件循环执行。
      */
     public void register(final SelectableChannel ch, final int interestOps, final NioTask<?> task) {
         ObjectUtil.checkNotNull(ch, "ch");
@@ -327,17 +343,17 @@ public final class NioEventLoop extends SingleThreadEventLoop {
     }
 
     /**
-     * Returns the percentage of the desired amount of time spent for I/O in the event loop.
+     * 返回在事件循环中花在I/O上的所需时间的百分比。
      */
     public int getIoRatio() {
         return ioRatio;
     }
 
     /**
-     * Sets the percentage of the desired amount of time spent for I/O in the event loop. Value range from 1-100.
-     * The default value is {@code 50}, which means the event loop will try to spend the same amount of time for I/O
-     * as for non-I/O tasks. The lower the number the more time can be spent on non-I/O tasks. If value set to
-     * {@code 100}, this feature will be disabled and event loop will not attempt to balance I/O and non-I/O tasks.
+     * 设置在事件循环中用于I/O的所需时间的百分比。取值范围为1 ~ 100。
+     *  默认值是{@code 50}，这意味着事件循环将尝试花费相同的时间用于I/O对于非i /O任务。
+     *  数量越少，花在非i/O任务上的时间就越多。
+     *  如果值设置为{@code 100}，该功能将被禁用，事件循环将不会尝试平衡I/O和非I/O任务。
      */
     public void setIoRatio(int ioRatio) {
         if (ioRatio <= 0 || ioRatio > 100) {
@@ -347,14 +363,15 @@ public final class NioEventLoop extends SingleThreadEventLoop {
     }
 
     /**
-     * Replaces the current {@link Selector} of this event loop with newly created {@link Selector}s to work
-     * around the infamous epoll 100% CPU bug.
+     * 将这个事件循环的当前{@link Selector}替换为新创建的{@link Selector}来工作围绕臭名昭著的epoll 100% CPU漏洞。
      */
     public void rebuildSelector() {
+        // 当前线程是不在事件循环中
         if (!inEventLoop()) {
             execute(new Runnable() {
                 @Override
                 public void run() {
+                    // 重新构造选择器
                     rebuildSelector0();
                 }
             });
@@ -431,7 +448,10 @@ public final class NioEventLoop extends SingleThreadEventLoop {
     }
 
     /**
-     * 从Selector中获取监听事件并处理
+     * 整个NioEventLoop的核心，是个死循环，不停的监听端口，获取读写事件，处理相应的事件
+     *      1.select(): 获取关心的读写事件key
+     *      2.processSelectedKeys(): 处理获取到的读写事件
+     *      3.runAllTasks(): 执行队列中所有待执行任务
      */
     @Override
     protected void run() {
@@ -493,7 +513,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
                             processSelectedKeys();
                         }
                     } finally {
-                        // Ensure we always run tasks.
+                        // 确保我们总是在运行任务。
                         ranTasks = runAllTasks();
                     }
                 } else if (strategy > 0) {
@@ -725,7 +745,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
                 ch.unsafe().forceFlush();
             }
 
-            // 还要检查readOps是否为0，以解决可能导致旋转循环的JDK错误
+            // 还要检查readOps是否为0，以解决可能导致旋转循环的JDK错误 OP_ACCEPT=16
             if ((readyOps & (SelectionKey.OP_READ | SelectionKey.OP_ACCEPT)) != 0 || readyOps == 0) {
                 unsafe.read();
             }
@@ -812,15 +832,29 @@ public final class NioEventLoop extends SingleThreadEventLoop {
         return unwrappedSelector;
     }
 
+    /**
+     * 默认实现是有任务就立即进行事件监听，没有阻塞等到事件到来。
+     *
+     * @return
+     * @throws IOException
+     */
     int selectNow() throws IOException {
         return selector.selectNow();
     }
 
+    /**
+     * 如果deadlineNanos == NONE, 表示堵塞select(),直到获取一个事件发生
+     * 如果 != NONE, 则根据timeoutMillis 判断select()立马返回还是堵塞timeoutMillis时长
+     *
+     * @param deadlineNanos
+     * @return
+     * @throws IOException
+     */
     private int select(long deadlineNanos) throws IOException {
         if (deadlineNanos == NONE) {
             return selector.select();
         }
-        // Timeout will only be 0 if deadline is within 5 microsecs
+        // 如果截止时间在5微秒内，超时时间将为0
         long timeoutMillis = deadlineToDelayNanos(deadlineNanos + 995000L) / 1000000L;
         return timeoutMillis <= 0 ? selector.selectNow() : selector.select(timeoutMillis);
     }

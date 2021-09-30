@@ -59,10 +59,10 @@ public abstract class AbstractScheduledEventExecutor extends AbstractEventExecut
     }
 
     /**
-     * Given an arbitrary deadline {@code deadlineNanos}, calculate the number of nano seconds from now
-     * {@code deadlineNanos} would expire.
-     * @param deadlineNanos An arbitrary deadline in nano seconds.
-     * @return the number of nano seconds from now {@code deadlineNanos} would expire.
+     * 给定一个任意的截止日期{@code deadlineNanos}，计算从现在开始的纳秒数{@code deadlineNanos}将过期。
+     *
+     * @param deadlineNanos 一个以纳秒为单位的任意期限。
+     * @return 从现在开始的纳秒数{@code deadlineNanos}将过期。
      */
     protected static long deadlineToDelayNanos(long deadlineNanos) {
         return ScheduledFutureTask.deadlineToDelayNanos(deadlineNanos);

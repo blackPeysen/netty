@@ -22,7 +22,7 @@ import io.netty.util.internal.StringUtil;
 import java.lang.reflect.Constructor;
 
 /**
- * A {@link ChannelFactory} that instantiates a new {@link Channel} by invoking its default constructor reflectively.
+ * 一个{@link ChannelFactory}，它通过反射式调用它的默认构造函数来实例化一个新的{@link Channel}。
  */
 public class ReflectiveChannelFactory<T extends Channel> implements ChannelFactory<T> {
 

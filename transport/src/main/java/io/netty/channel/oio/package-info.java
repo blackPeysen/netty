@@ -15,8 +15,7 @@
  */
 
 /**
- * Old blocking I/O based channel API implementation - recommended for
- * a small number of connections (&lt; 1000).
+ * 基于通道API的旧阻塞I/O实现-推荐用于少量连接(<1000)。
  *
  * @deprecated use NIO / EPOLL / KQUEUE transport.
  */

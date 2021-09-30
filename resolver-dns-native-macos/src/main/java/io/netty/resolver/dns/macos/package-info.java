@@ -15,6 +15,6 @@
  */
 
 /**
- * MacOS specific nameserver resolution.
+ * MacOS特定的名称服务器解析。
  */
 package io.netty.resolver.dns.macos;

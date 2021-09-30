@@ -15,8 +15,7 @@
  */
 
 /**
- * The core channel API which is asynchronous and event-driven abstraction of
- * various transports such as a
- * <a href="https://en.wikipedia.org/wiki/New_I/O#Channels">NIO Channel</a>.
+ * 核心通道API是异步的和事件驱动的抽象各种交通工具，
+ * 如<a href="https://en.wikipedia.org/wiki/New_I/O#Channels">NIO通道</a>。
  */
 package io.netty.channel;

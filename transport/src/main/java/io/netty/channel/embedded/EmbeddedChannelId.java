@@ -19,7 +19,7 @@ package io.netty.channel.embedded;
 import io.netty.channel.ChannelId;
 
 /**
- * A dummy {@link ChannelId} implementation.
+ * 一个假的{@link ChannelId}实现。
  */
 final class EmbeddedChannelId implements ChannelId {
 

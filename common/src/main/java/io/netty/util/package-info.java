@@ -15,6 +15,6 @@
  */
 
 /**
- * Utility classes used across multiple packages.
+ * 跨多个包使用的实用程序类。
  */
 package io.netty.util;

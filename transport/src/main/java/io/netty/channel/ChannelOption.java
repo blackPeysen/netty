@@ -27,7 +27,7 @@ import java.net.NetworkInterface;
  * {@link ChannelOption}允许在type-safe中配置一个{@link ChannelConfig}
  *      哪个{@link ChannelOption}被支持取决于实际的实现的{@link ChannelConfig}，可能取决于它所属的传输的性质
  *
- * @param <T>   对{@link ChannelOption}有效的值的类型
+ * @param <T> 对{@link ChannelOption}有效的值的类型
  */
 public class ChannelOption<T> extends AbstractConstant<ChannelOption<T>> {
 
@@ -55,7 +55,7 @@ public class ChannelOption<T> extends AbstractConstant<ChannelOption<T>> {
     }
 
     /**
-     * Returns {@code true} if a {@link ChannelOption} exists for the given {@code name}.
+     * 如果给定的{@code名称}存在{@link ChannelOption}，则返回{@code true}。
      */
     public static boolean exists(String name) {
         return pool.exists(name);

@@ -73,10 +73,9 @@ public class DefaultPromise<V> extends AbstractFuture<V> implements Promise<V> {
      * It is preferable to use {@link EventExecutor#newPromise()} to create a new promise
      *
      * @param executor
-     *        the {@link EventExecutor} which is used to notify the promise once it is complete.
-     *        It is assumed this executor will protect against {@link StackOverflowError} exceptions.
-     *        The executor may be used to avoid {@link StackOverflowError} by executing a {@link Runnable} if the stack
-     *        depth exceeds a threshold.
+     *        {@link EventExecutor}用于在承诺完成时通知它。
+     *      假设这个执行器将防止{@link StackOverflowError}异常。
+     *      执行器可以通过执行{@link Runnable}来避免{@link StackOverflowError}深度超过阈值。
      *
      */
     public DefaultPromise(EventExecutor executor) {

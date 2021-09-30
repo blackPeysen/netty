@@ -31,13 +31,10 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 import java.util.Set;
 
 /**
- * A thread-safe {@link Set} that contains open {@link Channel}s and provides
- * various bulk operations on them.  Using {@link ChannelGroup}, you can
- * categorize {@link Channel}s into a meaningful group (e.g. on a per-service
- * or per-state basis.)  A closed {@link Channel} is automatically removed from
- * the collection, so that you don't need to worry about the life cycle of the
- * added {@link Channel}.  A {@link Channel} can belong to more than one
- * {@link ChannelGroup}.
+ * 一个线程安全的{@link Set}，它包含打开的{@link Channel}并提供对它们进行各种大容量操作。
+ * 使用{@link ChannelGroup}，你可以将{@link Channel}分类到一个有意义的组中(例如在每个服务上或每个州的基础。)
+ * 一个关闭的{@link Channel}将被自动删除收集，这样就不需要担心生命周期了添加{@link Channel}。
+ * 一个{@link Channel}可以属于多个频道{@link ChannelGroup}。
  *
  * <h3>Broadcast a message to multiple {@link Channel}s</h3>
  * <p>

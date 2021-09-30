@@ -15,7 +15,7 @@
  */
 
 /**
- * Implementations and Interfaces for the Memcache Binary protocol.
+ * Memcache二进制协议的实现和接口。
  */
 @UnstableApi
 package io.netty.handler.codec.memcache.binary;

@@ -26,6 +26,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.MultithreadEventLoopGroup;
 import io.netty.channel.ServerChannel;
 import io.netty.util.AttributeKey;
 import io.netty.util.internal.ObjectUtil;
@@ -55,7 +56,7 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
     // worker线程组
     private volatile EventLoopGroup childGroup;
 
-    // channle通道处理器
+    // worker Channle通道处理器
     private volatile ChannelHandler childHandler;
 
     public ServerBootstrap() { }
@@ -162,7 +163,6 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
         /**
          * 给当前SocketChannel新增对应的ChannelHandler:
          *      但不是立马添加，而是等待当前Channel成功注册到Selecotr才会触发{@link ChannelInitializer#initChannel()}
-         *
          */
         p.addLast(new ChannelInitializer<Channel>() {
             @Override
@@ -257,6 +257,7 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
             try {
                 /**
                  * 将建立建立的请求socker注册到worker线程组中，由worker进行监听其读写事件
+                 * {@link MultithreadEventLoopGroup#register(io.netty.channel.Channel)}
                  */
                 childGroup.register(child).addListener(new ChannelFutureListener() {
                     @Override

@@ -15,6 +15,6 @@
  */
 
 /**
- * Utility classes for performing efficient substring search within {@link io.netty.buffer.ByteBuf}.
+ * 在{@link io.netty.buffer.ByteBuf}中执行高效子字符串搜索的实用工具类。
  */
 package io.netty.buffer.search;

@@ -290,10 +290,10 @@ public class DefaultChannelConfig implements ChannelConfig {
     }
 
     /**
-     * Set the {@link RecvByteBufAllocator} which is used for the channel to allocate receive buffers.
-     * @param allocator the allocator to set.
-     * @param metadata Used to set the {@link ChannelMetadata#defaultMaxMessagesPerRead()} if {@code allocator}
-     * is of type {@link MaxMessagesRecvByteBufAllocator}.
+     * 设置用于通道分配接收缓冲区的{@link RecvByteBufAllocator}。
+     * @param allocator 要设置的分配器。
+     * @param metadata 用于设置{@link ChannelMetadata#defaultMaxMessagesPerRead()} if {@code allocator}
+     *                      类型为{@link MaxMessagesRecvByteBufAllocator}。
      */
     private void setRecvByteBufAllocator(RecvByteBufAllocator allocator, ChannelMetadata metadata) {
         if (allocator instanceof MaxMessagesRecvByteBufAllocator) {

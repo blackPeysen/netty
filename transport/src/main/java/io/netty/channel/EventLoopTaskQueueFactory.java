@@ -25,9 +25,9 @@ import java.util.Queue;
 public interface EventLoopTaskQueueFactory {
 
     /**
-     * Returns a new {@link Queue} to use.
-     * @param maxCapacity the maximum amount of elements that can be stored in the {@link Queue} at a given point
-     *                    in time.
+     * 返回一个新的{@link Queue}来使用。
+     * @param maxCapacity 给定点时间上可以存储在{@link Queue}中的元素的最大数量
+     * *
      * @return the new queue.
      */
     Queue<Runnable> newTaskQueue(int maxCapacity);

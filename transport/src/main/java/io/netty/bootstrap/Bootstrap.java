@@ -37,11 +37,10 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
 /**
- * A {@link Bootstrap} that makes it easy to bootstrap a {@link Channel} to use
- * for clients.
+ * {@link Bootstrap}使得引导{@link Channel}使用起来很容易为客户。
  *
- * <p>The {@link #bind()} methods are useful in combination with connectionless transports such as datagram (UDP).
- * For regular TCP connections, please use the provided {@link #connect()} methods.</p>
+ * <p>{@link #bind()}方法在与无连接传输如数据报(UDP)相结合时很有用。
+ *      对于常规TCP连接，请使用提供的{@link #connect()}方法。</p>
  */
 public class Bootstrap extends AbstractBootstrap<Bootstrap, Channel> {
 

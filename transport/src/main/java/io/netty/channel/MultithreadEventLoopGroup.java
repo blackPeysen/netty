@@ -81,7 +81,9 @@ public abstract class MultithreadEventLoopGroup extends MultithreadEventExecutor
     protected abstract EventLoop newChild(Executor executor, Object... args) throws Exception;
 
     /**
-     * 将对应的SocketChannel注册到自己的Selector上，即EventLoop
+     * 将对应的SocketChannel注册到自己的Selector上，即EventLoop:
+     *      {@link #next()} 获取工作线程组中一个EventLoop进行注册
+     *      {@link SingleThreadEventLoop#register(io.netty.channel.Channel)} 进行注册
      *
      * @param channel
      * @return

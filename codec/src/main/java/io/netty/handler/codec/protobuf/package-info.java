@@ -15,9 +15,9 @@
  */
 
 /**
- * Encoder and decoder which transform a
- * <a href="https://github.com/google/protobuf">Google Protocol Buffers</a>
- * {@link com.google.protobuf.Message} and {@link com.google.protobuf.nano.MessageNano} into a
- * {@link io.netty.buffer.ByteBuf} and vice versa.
+ * 转换a的编码器和解码器
+ * * <a href="https://github.com/google/protobuf">谷歌协议缓冲区</a> . b0
+ * * {@link com.google.protobuf.Message}和{@link com.google.protobuf.nano.MessageNano}到一个
+ * * {@link io.netty.buffer.ByteBuf}，反之亦然。
  */
 package io.netty.handler.codec.protobuf;

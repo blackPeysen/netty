@@ -70,7 +70,7 @@ public abstract class AbstractNioChannel extends AbstractChannel {
     private SocketAddress requestedRemoteAddress;
 
     /**
-     * Create a new instance
+     * 创建一个新实例
      *
      * @param parent            创建此实例的父级{@link Channel}。可能是{@code null}
      * @param ch                它操作的底层{@link SelectableChannel}
@@ -81,6 +81,7 @@ public abstract class AbstractNioChannel extends AbstractChannel {
         this.ch = ch;
         this.readInterestOp = readInterestOp;
         try {
+            // 设置当前Socket不堵塞
             ch.configureBlocking(false);
         } catch (IOException e) {
             try {
@@ -119,7 +120,7 @@ public abstract class AbstractNioChannel extends AbstractChannel {
     }
 
     /**
-     * Return the current {@link SelectionKey}
+     * 返回当前的{@link SelectionKey}
      */
     protected SelectionKey selectionKey() {
         assert selectionKey != null;
@@ -429,19 +430,19 @@ public abstract class AbstractNioChannel extends AbstractChannel {
     }
 
     /**
-     * Connect to the remote peer
+     * 连接到远程对等体
      */
     protected abstract boolean doConnect(SocketAddress remoteAddress, SocketAddress localAddress) throws Exception;
 
     /**
-     * Finish the connect
+     * 完成连接
      */
     protected abstract void doFinishConnect() throws Exception;
 
     /**
-     * Returns an off-heap copy of the specified {@link ByteBuf}, and releases the original one.
-     * Note that this method does not create an off-heap copy if the allocation / deallocation cost is too high,
-     * but just returns the original {@link ByteBuf}..
+     * 返回指定的{@link ByteBuf}的非堆副本，并释放原始副本。
+     *      注意，如果分配/回收成本太高，该方法不会创建非堆拷贝，
+     *      但只是返回原始的{@link ByteBuf}..
      */
     protected final ByteBuf newDirectBuffer(ByteBuf buf) {
         final int readableBytes = buf.readableBytes();
@@ -470,10 +471,9 @@ public abstract class AbstractNioChannel extends AbstractChannel {
     }
 
     /**
-     * Returns an off-heap copy of the specified {@link ByteBuf}, and releases the specified holder.
-     * The caller must ensure that the holder releases the original {@link ByteBuf} when the holder is released by
-     * this method.  Note that this method does not create an off-heap copy if the allocation / deallocation cost is
-     * too high, but just returns the original {@link ByteBuf}..
+     * 返回指定的{@link ByteBuf}的堆外副本，并释放指定的持有者。
+     *      调用方必须确保持有者释放原始的{@link ByteBuf}时，持有者被释放这个方法。
+     *      注意，如果分配/回收成本为，此方法不会创建堆外副本太高，但只是返回原始的{@link ByteBuf}..
      */
     protected final ByteBuf newDirectBuffer(ReferenceCounted holder, ByteBuf buf) {
         final int readableBytes = buf.readableBytes();

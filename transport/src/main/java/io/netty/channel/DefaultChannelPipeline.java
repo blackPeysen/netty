@@ -41,7 +41,7 @@ import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
 /**
  * 默认的{@link ChannelPipeline}实现。
- * 它通常是由在创建{@link Channel}时由{@link Channel}实现。
+ *      它通常是由在创建{@link Channel}时由{@link Channel}实现。
  */
 public class DefaultChannelPipeline implements ChannelPipeline {
 
@@ -65,6 +65,10 @@ public class DefaultChannelPipeline implements ChannelPipeline {
     final AbstractChannelHandlerContext tail;
 
     private final Channel channel;
+
+    /**
+     * Future 和 Promise 是为了异步回调使用
+     */
     private final ChannelFuture succeededFuture;
     private final VoidChannelPromise voidPromise;
     private final boolean touch = ResourceLeakDetector.isEnabled();
@@ -74,18 +78,17 @@ public class DefaultChannelPipeline implements ChannelPipeline {
     private boolean firstRegistration = true;
 
     /**
-     * This is the head of a linked list that is processed by {@link #callHandlerAddedForAllHandlers()} and so process
-     * all the pending {@link #callHandlerAdded0(AbstractChannelHandlerContext)}.
+     * 这是一个链表的头，由{@link #callHandlerAddedForAllHandlers()}处理
+     *      所有挂起的{@link #callHandlerAdded0(AbstractChannelHandlerContext)}。
      *
-     * We only keep the head because it is expected that the list is used infrequently and its size is small.
-     * Thus full iterations to do insertions is assumed to be a good compromised to saving memory and tail management
-     * complexity.
+     * 我们只保留头部，因为我们预计这个列表使用的次数会很少，而且它的大小也很小。
+     *      因此，执行插入的完整迭代被认为是一个很好的折衷节省内存和尾部管理的复杂性。
      */
     private PendingHandlerCallback pendingHandlerCallbackHead;
 
     /**
-     * Set to {@code true} once the {@link AbstractChannel} is registered.Once set to {@code true} the value will never
-     * change.
+     * 一旦注册了{@link AbstractChannel}，就设置为{@code true}。
+     * 一旦设置为{@code true}，该值将永远不会出现改变。
      */
     private boolean registered;
 
@@ -94,9 +97,17 @@ public class DefaultChannelPipeline implements ChannelPipeline {
         succeededFuture = new SucceededChannelFuture(channel, null);
         voidPromise =  new VoidChannelPromise(channel, true);
 
+        /**
+         * 设置tail和head 对应的ChannelHandlerContext
+         *      HeadContext: 头部，既可以处理入站事件，也可以处理出站事件
+         *      TailContext: 尾部，只能处理入站事件
+         */
         tail = new TailContext(this);
         head = new HeadContext(this);
 
+        /**
+         * 设置双向链表
+         */
         head.next = tail;
         tail.prev = head;
     }
@@ -195,19 +206,37 @@ public class DefaultChannelPipeline implements ChannelPipeline {
         return addLast(null, name, handler);
     }
 
+    /**
+     * 向当前的ChannelPipeline中添加ChannelHandler:
+     *      1.每一个ChannelHandler都会对应一个ChannelHandlerContext，用于封装ChannelHandler
+     *      2.每一个ChannelHandlerContext都介于head 和  tail之间，用于处理事件
+     *
+     * @param group    the {@link EventExecutorGroup} which will be used to execute the {@link ChannelHandler}
+     *                 methods
+     * @param name     the name of the handler to append
+     * @param handler  the handler to append
+     *
+     * @return
+     */
     @Override
     public final ChannelPipeline addLast(EventExecutorGroup group, String name, ChannelHandler handler) {
         final AbstractChannelHandlerContext newCtx;
         synchronized (this) {
             checkMultiplicity(handler);
 
+            /**
+             * 创建ChannelHandlerContext 与当前的ChannelHandler进行关联
+             */
             newCtx = newContext(group, filterName(name, handler), handler);
 
+            /**
+             * 将当前新创建的ChannelHandlerContext 加入到双向链表中
+             */
             addLast0(newCtx);
 
-            // If the registered is false it means that the channel was not registered on an eventLoop yet.
-            // In this case we add the context to the pipeline and add a task that will call
-            // ChannelHandler.handlerAdded(...) once the channel is registered.
+            // 如果注册为false，则表示该通道还没有在eventLoop上注册。
+            // 在本例中，我们将上下文添加到管道中，并添加一个将调用
+            // 一旦注册了通道，ChannelHandler.handlerAdded(…)
             if (!registered) {
                 newCtx.setAddPending();
                 callHandlerCallbackLater(newCtx, true);
@@ -224,6 +253,11 @@ public class DefaultChannelPipeline implements ChannelPipeline {
         return this;
     }
 
+    /**
+     * Pipeline是一个双向链表，每添加一个handler时，都插入在tail的前面，tail永远在最后面
+     *
+     * @param newCtx
+     */
     private void addLast0(AbstractChannelHandlerContext newCtx) {
         AbstractChannelHandlerContext prev = tail.prev;
         newCtx.prev = prev;

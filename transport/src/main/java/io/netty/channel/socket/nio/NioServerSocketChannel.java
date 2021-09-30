@@ -59,8 +59,8 @@ public class NioServerSocketChannel extends AbstractNioMessageChannel
     private static ServerSocketChannel newSocket(SelectorProvider provider) {
         try {
             /**
-             *  Use the {@link SelectorProvider} to open {@link SocketChannel} and so remove condition in
-             *  {@link SelectorProvider#provider()} which is called by each ServerSocketChannel.open() otherwise.
+             *  使用{@link SelectorProvider}打开{@link SocketChannel}，因此删除条件
+             *      {@link SelectorProvider#provider()}由每个ServerSocketChannel.open()调用，否则。
              *
              *  See <a href="https://github.com/netty/netty/issues/2308">#2308</a>.
              */
@@ -74,7 +74,8 @@ public class NioServerSocketChannel extends AbstractNioMessageChannel
     private final ServerSocketChannelConfig config;
 
     /**
-     * Create a new instance
+     * 创建一个新实例：
+     *      通过{@link #DEFAULT_SELECTOR_PROVIDER} 创建JDK底层原始的NioChannel通道
      */
     public NioServerSocketChannel() {
         this(newSocket(DEFAULT_SELECTOR_PROVIDER));
@@ -147,12 +148,23 @@ public class NioServerSocketChannel extends AbstractNioMessageChannel
         javaChannel().close();
     }
 
+    /**
+     * 调用JDK底层的accept(),获取到一个JDK的SocketChannel，然后封装成NioSocketChannel，最后放入到buf集合中
+     *
+     * @param buf
+     * @return
+     * @throws Exception
+     */
     @Override
     protected int doReadMessages(List<Object> buf) throws Exception {
         SocketChannel ch = SocketUtils.accept(javaChannel());
 
         try {
             if (ch != null) {
+                /**
+                 * this: 表示当前的服务端SocketChannel通道
+                 * ch: 表示当前建立连接的客户端SocketChannel通道
+                 */
                 buf.add(new NioSocketChannel(this, ch));
                 return 1;
             }

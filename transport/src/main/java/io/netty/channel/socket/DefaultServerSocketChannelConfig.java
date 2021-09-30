@@ -35,7 +35,7 @@ import static io.netty.channel.ChannelOption.SO_REUSEADDR;
 import static io.netty.util.internal.ObjectUtil.checkPositiveOrZero;
 
 /**
- * The default {@link ServerSocketChannelConfig} implementation.
+ * 默认的{@link ServerSocketChannelConfig}实现。
  */
 public class DefaultServerSocketChannelConfig extends DefaultChannelConfig
                                               implements ServerSocketChannelConfig {
@@ -44,7 +44,7 @@ public class DefaultServerSocketChannelConfig extends DefaultChannelConfig
     private volatile int backlog = NetUtil.SOMAXCONN;
 
     /**
-     * Creates a new instance.
+     * 创建一个新实例。
      */
     public DefaultServerSocketChannelConfig(ServerSocketChannel channel, ServerSocket javaSocket) {
         super(channel);

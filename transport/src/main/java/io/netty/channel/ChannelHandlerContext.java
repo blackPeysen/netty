@@ -34,13 +34,12 @@ import java.nio.channels.Channels;
  *
  * 请参考{@link ChannelPipeline}了解事件如何流动。
  *
- * <h3>Modifying a pipeline</h3>
+ * <h3>修改管道</h3>
  *
- * You can get the {@link ChannelPipeline} your handler belongs to by calling
- * {@link #pipeline()}.  A non-trivial application could insert, remove, or
- * replace handlers in the pipeline dynamically at runtime.
+ * 你可以通过调用来获得你的处理程序所属的{@link ChannelPipeline}{@link #Channel()}。
+ * 一个重要的应用程序可以插入、删除或在运行时动态替换管道中的处理程序。
  *
- * <h3>Retrieving for later use</h3>
+ * <h3>检索以备日后使用</h3>
  *
  * You can keep the {@link ChannelHandlerContext} for later use, such as
  * triggering an event outside the handler methods, even from a different thread.
@@ -87,7 +86,7 @@ import java.nio.channels.Channels;
 public interface ChannelHandlerContext extends AttributeMap, ChannelInboundInvoker, ChannelOutboundInvoker {
 
     /**
-     * Return the {@link Channel} which is bound to the {@link ChannelHandlerContext}.
+     * 返回绑定到{@link ChannelHandlerContext}的{@link Channel}。
      */
     Channel channel();
 

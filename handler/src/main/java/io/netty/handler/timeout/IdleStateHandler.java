@@ -31,8 +31,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Triggers an {@link IdleStateEvent} when a {@link Channel} has not performed
- * read, write, or both operation for a while.
+ * 当{@link Channel}未执行时触发{@link IdleStateEvent}读、写或同时操作一段时间。
  *
  * <h3>Supported idle states</h3>
  * <table border="1">

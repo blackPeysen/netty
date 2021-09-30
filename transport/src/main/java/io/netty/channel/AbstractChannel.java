@@ -58,15 +58,17 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
     private boolean closeInitiated;
     private Throwable initialCloseCause;
 
-    /** Cache for the string representation of this channel */
+    /** 缓存此通道的字符串表示形式 */
     private boolean strValActive;
     private String strVal;
 
     /**
-     * Creates a new instance.
+     * 创建一个新实例：
+     *      1.如果是客户端SocketChannel，parent则是对应的ServerSocketChannel
+     *      2.创建唯一的ChannelId
+     *      3.创建该channlel关联的ChannlePipiline
      *
-     * @param parent
-     *        the parent of this channel. {@code null} if there's no parent.
+     * @param parent 该通道的父通道。{@code null}如果没有父元素。
      */
     protected AbstractChannel(Channel parent) {
         this.parent = parent;
@@ -76,7 +78,7 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
     }
 
     /**
-     * Creates a new instance.
+     * 创建一个新实例。
      *
      * @param parent
      *        the parent of this channel. {@code null} if there's no parent.
@@ -102,7 +104,7 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
     }
 
     /**
-     * Returns a new {@link DefaultChannelPipeline} instance.
+     * 返回一个新的{@link DefaultChannelPipeline}实例。
      */
     protected DefaultChannelPipeline newChannelPipeline() {
         return new DefaultChannelPipeline(this);
@@ -330,12 +332,12 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
     }
 
     /**
-     * Create a new {@link AbstractUnsafe} instance which will be used for the life-time of the {@link Channel}
+     * 创建一个新的{@link AbstractUnsafe}实例，该实例将在{@link通道}的生命周期中使用。
      */
     protected abstract AbstractUnsafe newUnsafe();
 
     /**
-     * Returns the ID of this channel.
+     * 返回此通道的ID。
      */
     @Override
     public final int hashCode() {
@@ -507,7 +509,12 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
                     return;
                 }
                 boolean firstRegistration = neverRegistered;
+
+                /**
+                 * 将当前客户端SocketChannel注册到EventLoop上的Selector上
+                 */
                 doRegister();
+
                 neverRegistered = false;
                 registered = true;
 

@@ -15,7 +15,7 @@
  */
 
 /**
- * Decodes an HAProxy proxy protocol header
+ * 解码HAProxy代理协议头
  *
  * @see <a href="https://haproxy.1wt.eu/download/1.5/doc/proxy-protocol.txt">Proxy Protocol Specification</a>
  */

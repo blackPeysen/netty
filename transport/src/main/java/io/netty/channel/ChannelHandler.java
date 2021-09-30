@@ -26,8 +26,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Handles an I/O event or intercepts an I/O operation, and forwards it to its next handler in
- * its {@link ChannelPipeline}.
+ * 处理I/O事件或拦截I/O操作，并将其转发给它的下一个处理程序其{@link ChannelPipeline}。
  *
  * <h3>Sub-types</h3>
  * <p>
@@ -178,33 +177,28 @@ import java.lang.annotation.Target;
 public interface ChannelHandler {
 
     /**
-     * Gets called after the {@link ChannelHandler} was added to the actual context and it's ready to handle events.
+     * 在将{@link ChannelHandler}添加到实际上下文之后调用，它已经准备好处理事件。
      */
     void handlerAdded(ChannelHandlerContext ctx) throws Exception;
 
     /**
-     * Gets called after the {@link ChannelHandler} was removed from the actual context and it doesn't handle events
-     * anymore.
+     * 从实际上下文中移除{@link ChannelHandler}后调用，它不处理事件了。
      */
     void handlerRemoved(ChannelHandlerContext ctx) throws Exception;
 
     /**
-     * Gets called if a {@link Throwable} was thrown.
+     * 当{@link Throwable}被抛出时调用。
      *
-     * @deprecated if you want to handle this event you should implement {@link ChannelInboundHandler} and
-     * implement the method there.
+     * @deprecated 如果你想处理这个事件，你应该实现{@link ChannelInboundHandler}和实现那里的方法。
      */
     @Deprecated
     void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception;
 
     /**
-     * Indicates that the same instance of the annotated {@link ChannelHandler}
-     * can be added to one or more {@link ChannelPipeline}s multiple times
-     * without a race condition.
+     * 指示带注释的{@link ChannelHandler}的相同实例
+     *      可以多次添加到一个或多个{@link ChannelPipeline}中没有竞争条件。
      * <p>
-     * If this annotation is not specified, you have to create a new handler
-     * instance every time you add it to a pipeline because it has unshared
-     * state such as member variables.
+     * 如果未指定此注释，则必须创建一个新的处理程序实例每次添加到管道，因为它有非共享状态，如成员变量。
      * <p>
      * This annotation is provided for documentation purpose, just like
      * <a href="http://www.javaconcurrencyinpractice.com/annotations/doc/">the JCIP annotations</a>.

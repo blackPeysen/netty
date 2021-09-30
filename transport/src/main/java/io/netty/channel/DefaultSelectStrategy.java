@@ -18,9 +18,10 @@ package io.netty.channel;
 import io.netty.util.IntSupplier;
 
 /**
- * 默认选择的策略。
+ * 默认选择的策略
  */
 final class DefaultSelectStrategy implements SelectStrategy {
+    // 饿汉式单例模式
     static final SelectStrategy INSTANCE = new DefaultSelectStrategy();
 
     private DefaultSelectStrategy() { }

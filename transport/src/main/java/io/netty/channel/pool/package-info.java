@@ -15,6 +15,6 @@
  */
 
 /**
- * Implementations and API for {@link io.netty.channel.Channel} pools.
+ * {@link io.netty.channel.Channel}池的实现和API。
  */
 package io.netty.channel.pool;

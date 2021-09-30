@@ -123,11 +123,10 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
     }
 
     /**
-     * {@link io.netty.channel.ChannelFactory} which is used to create {@link Channel} instances from
-     * when calling {@link #bind()}. This method is usually only used if {@link #channel(Class)}
-     * is not working for you because of some more complex needs. If your {@link Channel} implementation
-     * has a no-args constructor, its highly recommend to just use {@link #channel(Class)} to
-     * simplify your code.
+     * {@link io.netty.channel.ChannelFactory}用于从当调用{@link #bind()}时。
+     * 这个方法通常只在{@link #channel(Class)}中使用。
+     * 并不适合您，因为一些更复杂的需求。如果你的{@link Channel}实现
+     * 有一个无参数的构造函数，强烈建议使用{@link #channel(Class)} to 简化你的代码。
      */
     @SuppressWarnings({ "unchecked", "deprecation" })
     public B channelFactory(io.netty.channel.ChannelFactory<? extends C> channelFactory) {
@@ -328,7 +327,20 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
     final ChannelFuture initAndRegister() {
         Channel channel = null;
         try {
+            /**
+             * 通过反射工厂创建对应的{@link io.netty.channel.socket.nio.NioServerSocketChannel}
+             *      1、得到底层jdk的ServerSocketChannel，用于包装
+             *      2、创建唯一的ChannelId
+             *      3、创建Channle关联的DefaultChannelPipeline
+             *      4、创建NioServerSocketChannleConfig配置信息
+             */
             channel = channelFactory.newChannel();
+
+            /**
+             * 对{@link #Channel}进行初始化配置
+             *      1、设置tcp属性
+             *      2、设置pipeline中的ChannelHandler
+             */
             init(channel);
         } catch (Throwable t) {
             if (channel != null) {

@@ -15,7 +15,7 @@
  */
 
 /**
- * Common superset of ascii and binary classes.
+ * ascii和二进制类的通用超集。
  */
 @UnstableApi
 package io.netty.handler.codec.memcache;

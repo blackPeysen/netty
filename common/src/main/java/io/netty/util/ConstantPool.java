@@ -75,7 +75,7 @@ public abstract class ConstantPool<T extends Constant<T>> {
     }
 
     /**
-     * Returns {@code true} if a {@link AttributeKey} exists for the given {@code name}.
+     * 如果给定的{@code名称}存在{@link AttributeKey}，则返回{@code true}。
      */
     public boolean exists(String name) {
         checkNotNullAndNotEmpty(name);

@@ -15,6 +15,6 @@
  */
 
 /**
- * Resolves an arbitrary string that represents the name of an endpoint into an address.
+ * 将表示端点名称的任意字符串解析为地址。
  */
 package io.netty.resolver;

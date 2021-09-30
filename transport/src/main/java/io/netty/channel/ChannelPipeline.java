@@ -40,11 +40,9 @@ import java.util.NoSuchElementException;
  *
  * <h3>事件如何在管道中流动</h3>
  *
- * The following diagram describes how I/O events are processed by {@link ChannelHandler}s in a {@link ChannelPipeline}
- * typically. An I/O event is handled by either a {@link ChannelInboundHandler} or a {@link ChannelOutboundHandler}
- * and be forwarded to its closest handler by calling the event propagation methods defined in
- * {@link ChannelHandlerContext}, such as {@link ChannelHandlerContext#fireChannelRead(Object)} and
- * {@link ChannelHandlerContext#write(Object)}.
+ * 下图描述了在{@link ChannelPipeline}中的{@link ChannelHandler}如何处理I/O事件。
+ *  一般, I/O事件由{@link ChannelOutboundHandler}或{@link ChannelOutboundHandler}处理中定义的事件传播方法被转发到其最近的处理程序{@link ChannelHandlerContext}，
+ *  例如{@link ChannelHandlerContext#fireChannelRead(Object)}和{@link ChannelHandlerContext #写(对象)}。
  *
  * <pre>
  *                                                 I/O Request
@@ -173,12 +171,10 @@ import java.util.NoSuchElementException;
  * }
  * </pre>
  *
- * <h3>Building a pipeline</h3>
+ * <h3>建立一个管道</h3>
  * <p>
- * A user is supposed to have one or more {@link ChannelHandler}s in a pipeline to receive I/O events (e.g. read) and
- * to request I/O operations (e.g. write and close).  For example, a typical server will have the following handlers
- * in each channel's pipeline, but your mileage may vary depending on the complexity and characteristics of the
- * protocol and business logic:
+ * 一个用户应该在一个管道中有一个或多个{@link ChannelHandler}来接收I/O事件(例如read)和请求I/O操作(例如写和关闭)。
+ * 例如，一个典型的服务器将具有以下处理程序在每个通道的管道，但您的里程可能会有所不同，取决于复杂性和特点的协议和业务逻辑:
  *
  * <ol>
  * <li>Protocol Decoder - translates binary data (e.g. {@link ByteBuf}) into a Java object.</li>
@@ -186,7 +182,7 @@ import java.util.NoSuchElementException;
  * <li>Business Logic Handler - performs the actual business logic (e.g. database access).</li>
  * </ol>
  *
- * and it could be represented as shown in the following example:
+ * 可以用下面的例子来表示:
  *
  * <pre>
  * static final {@link EventExecutorGroup} group = new {@link DefaultEventExecutorGroup}(16);
@@ -210,11 +206,10 @@ import java.util.NoSuchElementException;
  * it may still become a bottle-neck. If ordering is not a requirement for your use-case you may want to consider using
  * {@link UnorderedThreadPoolEventExecutor} to maximize the parallelism of the task execution.
  *
- * <h3>Thread safety</h3>
+ * <h3>线程安全</h3>
  * <p>
- * A {@link ChannelHandler} can be added or removed at any time because a {@link ChannelPipeline} is thread safe.
- * For example, you can insert an encryption handler when sensitive information is about to be exchanged, and remove it
- * after the exchange.
+ * {@link ChannelHandler}可以在任何时候添加或删除，因为{@link ChannelPipeline}是线程安全的。
+ *      例如，您可以在敏感信息即将交换时插入加密处理程序，然后将其删除交换后。
  */
 public interface ChannelPipeline
         extends ChannelInboundInvoker, ChannelOutboundInvoker, Iterable<Entry<String, ChannelHandler>> {

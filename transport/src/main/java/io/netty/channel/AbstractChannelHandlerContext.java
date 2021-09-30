@@ -952,8 +952,8 @@ abstract class AbstractChannelHandlerContext implements ChannelHandlerContext, R
     }
 
     /**
-     * Makes best possible effort to detect if {@link ChannelHandler#handlerAdded(ChannelHandlerContext)} was called
-     * yet. If not return {@code false} and if called or could not detect return {@code true}.
+     * 尽最大努力检测{@link ChannelHandler#handlerAdded(ChannelHandlerContext)}是否被调用;
+     * 如果未调用，则返回{@code false}，如果调用或无法检测，则返回{@code true}。
      *
      * If this method returns {@code false} we will not invoke the {@link ChannelHandler} but just forward the event.
      * This is needed as {@link DefaultChannelPipeline} may already put the {@link ChannelHandler} in the linked-list

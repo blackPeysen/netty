@@ -61,6 +61,7 @@ public abstract class AbstractNioMessageChannel extends AbstractNioChannel {
 
         @Override
         public void read() {
+            // 判断eventLoop是否是当前线程
             assert eventLoop().inEventLoop();
             final ChannelConfig config = config();
             final ChannelPipeline pipeline = pipeline();
@@ -72,6 +73,7 @@ public abstract class AbstractNioMessageChannel extends AbstractNioChannel {
             try {
                 try {
                     do {
+                        // 获取到一个JDK的SocketChannel，然后封装成NioSocketChannel
                         int localRead = doReadMessages(readBuf);
                         if (localRead == 0) {
                             break;
@@ -88,6 +90,13 @@ public abstract class AbstractNioMessageChannel extends AbstractNioChannel {
                 }
 
                 int size = readBuf.size();
+
+                /**
+                 * 遍历上面获取到的readBuf，即NioSocketChannel:
+                 *      1.每一个NioSocketChannel都是与服务端建立连接的客户端socketChannel
+                 *      2.此时的pipeline是当前ServerSocketChannel对应的pipeline，包含ServerBootstrapAcceptor 处理器
+                 *      3.ServerBootstrapAcceptor 处理器 会将当前建立连接的客户端SocketChannel注册到worker工作组中，由worker监听读写事件
+                 */
                 for (int i = 0; i < size; i ++) {
                     readPending = false;
                     pipeline.fireChannelRead(readBuf.get(i));

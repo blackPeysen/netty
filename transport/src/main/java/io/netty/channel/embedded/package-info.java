@@ -15,8 +15,8 @@
  */
 
 /**
- * A virtual {@link io.netty.channel.Channel} that helps wrapping a series of handlers to
- * unit test the handlers or use them in non-I/O context.
+ * 一个虚拟的{@link io.netty.channel.Channel}，
+ *      帮助包装一系列的处理程序单元测试处理程序或在非i/O上下文中使用它们。
  */
 package io.netty.channel.embedded;
 
